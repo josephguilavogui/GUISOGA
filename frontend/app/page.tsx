@@ -1,94 +1,76 @@
 "use client";
 import { useState, useEffect } from "react";
+import { Youtube, Instagram, MessageCircle, Send, Video } from "lucide-react"; // Pense à installer lucide-react ou utiliser des emojis
 
 export default function GuisogaMainPage() {
-  // Le compteur commence à 1 et augmentera avec tes abonnés réels
   const [subscriberCount, setSubscriberCount] = useState(1);
   const target = 1000;
-
-  // Calcul automatique de la progression pour la barre dorée
   const percentage = Math.min((subscriberCount / target) * 100, 100);
 
-  useEffect(() => {
-    // Simulation de la récupération des données réelles du backend Go
-    // Plus tard, nous remplacerons ceci par un fetch vers ton API
-    const fetchRealStats = async () => {
-      try {
-        // Remplace l'URL ci-dessous par celle de ton backend une fois prêt
-        // const res = await fetch('https://ton-api-go.vercel.app/api/subscribers');
-        // const data = await res.json();
-        // setSubscriberCount(data.total);
-      } catch (e) {
-        console.log("En attente de connexion au moteur Go...");
-      }
-    };
-    fetchRealStats();
-  }, []);
-
   return (
-    <main className="min-h-screen bg-black text-white p-6 font-sans">
-      {/* Header avec Logo et Statut */}
-      <div className="max-w-md mx-auto space-y-8">
-        <header className="flex flex-col items-center text-center space-y-4">
-          <div className="w-24 h-24 rounded-full border-2 border-yellow-500 p-1">
-             <img 
-               src="/icon-512.png?v=5" 
-               alt="GUISOGA Logo" 
-               className="rounded-full w-full h-full object-cover"
-             />
+    <main className="min-h-screen bg-black text-white p-4 font-sans">
+      <div className="max-w-md mx-auto space-y-6">
+        
+        {/* Header avec ton Logo Doré */}
+        <header className="flex flex-col items-center text-center pt-4">
+          <div className="w-20 h-20 rounded-full border-2 border-yellow-500 p-1 mb-3">
+             <img src="/icon-512.png?v=6" alt="GUISOGA" className="rounded-full w-full h-full object-cover" />
           </div>
-          <h1 className="text-3xl font-extrabold tracking-tighter text-yellow-500">
-            GUISOGA
-          </h1>
-          <p className="text-gray-400 italic text-sm">"Voyez plus loin, ensemble."</p>
+          <h1 className="text-2xl font-bold text-yellow-500 tracking-widest">GUISOGA</h1>
+          <p className="text-gray-400 text-xs italic">"Voyez plus loin, ensemble."</p>
         </header>
 
-        {/* Bloc Éligibilité Dynamique */}
-        <section className="bg-zinc-900 border border-yellow-900/50 rounded-2xl p-6 shadow-2xl">
-          <div className="flex justify-between items-end mb-4">
-            <div>
-              <h2 className="text-lg font-bold text-white">Éligibilité Créateur</h2>
-              <p className="text-xs text-gray-500">Seuil de monétisation</p>
-            </div>
-            <div className="text-right">
-              <span className="text-xl font-mono font-bold text-yellow-500">{subscriberCount}</span>
-              <span className="text-gray-500 text-sm"> / {target}</span>
-            </div>
+        {/* Bloc Éligibilité Dynamique (Ton compteur à 1) */}
+        <section className="bg-zinc-900 border border-yellow-900/40 rounded-2xl p-5 shadow-xl">
+          <div className="flex justify-between items-center mb-3">
+            <span className="text-xs font-bold uppercase text-yellow-600">Statut Éligibilité</span>
+            <span className="text-sm font-mono">{subscriberCount} / {target}</span>
           </div>
-
-          {/* Barre de progression dynamique */}
-          <div className="w-full bg-zinc-800 rounded-full h-3 mb-4 overflow-hidden">
-            <div 
-              className="bg-gradient-to-r from-yellow-700 via-yellow-500 to-yellow-200 h-full transition-all duration-1000 ease-out"
-              style={{ width: `${percentage}%` }}
-            ></div>
+          <div className="w-full bg-zinc-800 rounded-full h-2 mb-3">
+            <div className="bg-yellow-500 h-full rounded-full transition-all duration-1000" style={{ width: `${percentage}%` }}></div>
           </div>
-
-          <div className="bg-black/40 rounded-lg p-3 border border-white/5">
-            <p className="text-xs text-center text-gray-400">
-              {subscriberCount >= target 
-                ? "✅ Félicitations ! Votre monétisation est active." 
-                : `🚀 Encore ${target - subscriberCount} abonnés pour débloquer vos gains privés.`}
-            </p>
-          </div>
+          <p className="text-[10px] text-center text-gray-500">Accès aux analyses privées débloqué à 1 000 abonnés.</p>
         </section>
 
-        {/* Centre de Messagerie (Messenger style) */}
-        <section className="space-y-4">
-          <h3 className="text-sm font-semibold uppercase tracking-widest text-gray-500 ml-2">Analyses Récentes</h3>
-          <div className="bg-zinc-900 rounded-2xl p-4 flex items-center space-x-4 border border-white/5">
-            <div className="w-12 h-12 bg-yellow-600 rounded-full flex items-center justify-center font-bold">G</div>
-            <div className="flex-1">
-              <h4 className="font-bold text-sm">Moteur d'Analyse Or</h4>
-              <p className="text-xs text-gray-400 truncate">Calcul d'angle mort terminé. Signal prêt...</p>
-            </div>
-            <span className="text-[10px] text-gray-600">À l'instant</span>
+        {/* SECTION VIDÉOS GRATUITES (Lecteur Intégré) */}
+        <section className="space-y-3">
+          <h3 className="text-sm font-bold flex items-center gap-2 px-2">
+            <Video size={16} className="text-yellow-500" /> CONTENU GRATUIT
+          </h3>
+          <div className="aspect-video w-full rounded-xl overflow-hidden border border-white/10 shadow-lg">
+            {/* Ici on peut mettre une vidéo YouTube de ton choix */}
+            <iframe 
+              className="w-full h-full"
+              src="https://www.youtube.com/embed/dQw4w9WgXcQ" // Remplace par ton lien de vidéo gratuite
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
           </div>
+          <p className="text-[11px] text-gray-400 px-2 italic text-center">Toutes nos analyses publiques sont accessibles sans frais.</p>
         </section>
 
-        <footer className="text-center pt-8">
-           <button className="bg-yellow-500 text-black font-bold py-3 px-8 rounded-full hover:bg-yellow-400 transition-colors shadow-lg shadow-yellow-500/20">
-             Partager mon profil
+        {/* SECTION RÉSEAUX SOCIAUX (Tes autres parties) */}
+        <section className="grid grid-cols-2 gap-3">
+          <a href="https://tiktok.com" className="flex items-center justify-center gap-2 bg-zinc-900 p-3 rounded-xl border border-white/5 hover:bg-zinc-800">
+            <span className="text-xs">TikTok</span>
+          </a>
+          <a href="https://instagram.com" className="flex items-center justify-center gap-2 bg-zinc-900 p-3 rounded-xl border border-white/5 hover:bg-zinc-800">
+            <span className="text-xs">Instagram</span>
+          </a>
+          <a href="https://youtube.com" className="flex items-center justify-center gap-2 bg-zinc-900 p-3 rounded-xl border border-white/5 hover:bg-zinc-800">
+            <span className="text-xs text-red-500">YouTube</span>
+          </a>
+          <a href="https://t.me" className="flex items-center justify-center gap-2 bg-zinc-900 p-3 rounded-xl border border-white/5 hover:bg-zinc-800">
+            <span className="text-xs text-blue-400">Telegram</span>
+          </a>
+        </section>
+
+        {/* Bouton de Partage Final */}
+        <footer className="pb-10">
+           <button className="w-full bg-yellow-500 text-black font-bold py-4 rounded-2xl shadow-lg shadow-yellow-500/10 active:scale-95 transition-transform">
+             PARTAGER MON PROFIL
            </button>
         </footer>
       </div>
