@@ -2,31 +2,33 @@
 import { useState, useEffect } from "react";
 import { 
   Home, Tv, MessageCircle, Users, Heart, PlusSquare, 
-  Search, Share2, ChevronLeft, Send, X, Maximize2
+  Search, Share2, ChevronLeft, Send, X, Play
 } from "lucide-react";
 
 export default function GuisogaSuperApp() {
   const [activeTab, setActiveTab] = useState("home");
   const [messages, setMessages] = useState([
-    { id: 1, sender: "Joseph Guilavogui", text: "Bienvenue dans l'élite. L'avenir se construit ici.", isMe: false }
+    { id: 1, sender: "Joseph Guilavogui", text: "Bienvenue. Regardez nos flux exclusifs.", isMe: false }
   ]);
   const [inputValue, setInputValue] = useState("");
   const [showBubble, setShowBubble] = useState(false);
-  const [lastMessage, setLastMessage] = useState("");
+  
+  // Système de gestion des chaînes vidéo
+  const channels = [
+    { id: "jfKfPfyJRdk", name: "Lofi Live", desc: "Détente & Focus" },
+    { id: "21X5lGlDOfg", name: "NASA Live", desc: "Espace en Direct" },
+    { id: "9u_6Trc_vlo", name: "World News", desc: "Infos Mondiales" }
+  ];
+  const [currentVideo, setCurrentVideo] = useState(channels[0].id);
 
-  // Simulation de réception de message (Bulle Messenger)
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLastMessage("Nouveau direct disponible sur GUISOGA TV !");
-      setShowBubble(true);
-    }, 5000);
+    const timer = setTimeout(() => setShowBubble(true), 5000);
     return () => clearTimeout(timer);
   }, []);
 
   const handleSendMessage = () => {
     if (inputValue.trim()) {
-      const newMessage = { id: Date.now(), sender: "Moi", text: inputValue, isMe: true };
-      setMessages([...messages, newMessage]);
+      setMessages([...messages, { id: Date.now(), sender: "Moi", text: inputValue, isMe: true }]);
       setInputValue("");
     }
   };
@@ -35,10 +37,10 @@ export default function GuisogaSuperApp() {
     <main className="min-h-screen bg-black text-white font-sans pb-24 overflow-x-hidden">
       
       {/* BARRE SUPÉRIEURE */}
-      <nav className="sticky top-0 z-50 bg-black/90 backdrop-blur-md border-b border-zinc-800 px-4 py-3 flex items-center justify-between">
+      <nav className="sticky top-0 z-50 bg-black/95 backdrop-blur-md border-b border-zinc-800 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           {activeTab !== "home" && (
-            <button onClick={() => setActiveTab("home")} className="p-1 hover:bg-zinc-800 rounded-full transition-all">
+            <button onClick={() => setActiveTab("home")} className="p-1 hover:bg-zinc-800 rounded-full">
               <ChevronLeft className="text-yellow-500" size={28} />
             </button>
           )}
@@ -46,8 +48,8 @@ export default function GuisogaSuperApp() {
             GUISOGA
           </h1>
         </div>
-        <div className="flex gap-4 items-center">
-          <Search title="Recherche" className="text-gray-400 cursor-pointer" />
+        <div className="flex gap-4">
+          <Search className="text-gray-400 cursor-pointer" />
           <div className="relative cursor-pointer" onClick={() => {setActiveTab("chat"); setShowBubble(false)}}>
             <MessageCircle className={activeTab === "chat" ? "text-yellow-500" : "text-gray-400"} />
             {showBubble && <span className="absolute -top-1 -right-1 bg-red-600 w-2 h-2 rounded-full animate-ping"></span>}
@@ -55,16 +57,16 @@ export default function GuisogaSuperApp() {
         </div>
       </nav>
 
-      {/* BULLE MESSENGER FLOTTANTE */}
+      {/* BULLE MESSENGER */}
       {showBubble && (
-        <div className="fixed top-20 right-4 z-[100] animate-in slide-in-from-right duration-500">
-          <div className="bg-yellow-500 text-black p-3 rounded-2xl rounded-tr-none shadow-2xl flex items-center gap-3 max-w-[250px]">
-            <div className="w-8 h-8 rounded-full bg-black flex-shrink-0 flex items-center justify-center">
+        <div className="fixed top-20 right-4 z-[100] animate-in slide-in-from-right">
+          <div className="bg-yellow-500 text-black p-3 rounded-2xl rounded-tr-none shadow-2xl flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center">
               <img src="/icon-192.png" alt="JG" className="w-6 h-6 rounded-full" />
             </div>
             <div onClick={() => {setActiveTab("chat"); setShowBubble(false)}} className="cursor-pointer">
-              <p className="text-[10px] font-black uppercase">Message Elite</p>
-              <p className="text-[11px] leading-tight font-medium truncate">{lastMessage}</p>
+              <p className="text-[10px] font-black uppercase tracking-tighter">Joseph Guilavogui</p>
+              <p className="text-[11px] font-medium">Nouveau live disponible !</p>
             </div>
             <X size={14} className="cursor-pointer" onClick={() => setShowBubble(false)} />
           </div>
@@ -76,113 +78,94 @@ export default function GuisogaSuperApp() {
         
         {/* --- ACCUEIL --- */}
         {activeTab === "home" && (
-          <section className="animate-in fade-in duration-500">
-            <div className="bg-gradient-to-r from-yellow-500/20 to-transparent m-4 p-6 rounded-3xl border border-yellow-500/20">
-              <h2 className="text-xl font-black mb-1">JOSEPH GUILAVOGUI</h2>
-              <p className="text-gray-400 text-sm italic">"L'excellence n'est pas un acte, c'est une habitude."</p>
-            </div>
-            {/* Contenu flux */}
-            {[1].map((post) => (
-              <div key={post} className="p-4 border-b border-zinc-900">
-                <div className="aspect-square bg-zinc-900 rounded-3xl mb-4 flex items-center justify-center overflow-hidden border border-white/5">
-                   <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&q=80" className="w-full h-full object-cover opacity-50" />
-                   <p className="absolute font-black text-2xl italic tracking-tighter text-yellow-500">EMPIRE GUISOGA</p>
-                </div>
-                <div className="flex gap-6">
-                  <Heart className="hover:text-red-500 cursor-pointer" />
-                  <MessageCircle className="hover:text-yellow-500 cursor-pointer" onClick={() => setActiveTab("chat")} />
-                  <Share2 className="ml-auto cursor-pointer" />
-                </div>
-              </div>
-            ))}
+          <section className="animate-in fade-in p-4">
+             <div className="bg-zinc-900/50 p-6 rounded-[2.5rem] border border-yellow-500/20 mb-6">
+                <p className="text-yellow-500 font-black text-xs uppercase tracking-widest mb-2">Joseph Guilavogui</p>
+                <h2 className="text-2xl font-black leading-tight">L'empire de l'excellence mondiale.</h2>
+             </div>
+             <button onClick={() => setActiveTab("video")} className="w-full bg-yellow-500 text-black font-black py-4 rounded-2xl uppercase text-xs tracking-widest active:scale-95 transition-transform">
+                Accéder au Direct
+             </button>
           </section>
         )}
 
-        {/* --- MESSAGERIE INTERACTIVE --- */}
+        {/* --- TV MODE (MULTI-CHAÎNES) --- */}
+        {activeTab === "video" && (
+          <section className="animate-in zoom-in">
+            <div className="relative aspect-video w-full bg-black">
+              <iframe 
+                className="w-full h-full"
+                src={`https://www.youtube.com/embed/${currentVideo}?autoplay=1&mute=0&controls=1`} 
+                frameBorder="0"
+                allowFullScreen
+              ></iframe>
+              <div className="absolute top-4 left-4 bg-red-600 px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-2">
+                <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div> EN DIRECT
+              </div>
+            </div>
+
+            {/* Liste des Chaînes Disponibles */}
+            <div className="p-4 space-y-3">
+              <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] ml-2">Chaînes Disponibles</p>
+              <div className="grid grid-cols-1 gap-2">
+                {channels.map((ch) => (
+                  <div 
+                    key={ch.id}
+                    onClick={() => setCurrentVideo(ch.id)}
+                    className={`flex items-center gap-4 p-4 rounded-3xl border transition-all cursor-pointer ${
+                      currentVideo === ch.id ? "bg-yellow-500 text-black border-yellow-500" : "bg-zinc-900 border-white/5 text-white"
+                    }`}
+                  >
+                    <div className={`p-2 rounded-xl ${currentVideo === ch.id ? "bg-black/10" : "bg-yellow-500/10"}`}>
+                      <Play size={20} fill={currentVideo === ch.id ? "black" : "none"} />
+                    </div>
+                    <div>
+                      <p className="font-black text-sm uppercase tracking-tighter">{ch.name}</p>
+                      <p className={`text-[10px] ${currentVideo === ch.id ? "text-black/60" : "text-gray-500"}`}>{ch.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* --- MESSAGERIE --- */}
         {activeTab === "chat" && (
-          <section className="flex flex-col h-[80vh] p-4 animate-in slide-in-from-right">
-            <div className="flex-1 overflow-y-auto space-y-4 pb-4">
+          <section className="flex flex-col h-[75vh] p-4 animate-in slide-in-from-right">
+            <div className="flex-1 overflow-y-auto space-y-4 mb-4 pr-2">
               {messages.map((m) => (
                 <div key={m.id} className={`flex ${m.isMe ? "justify-end" : "justify-start"}`}>
-                  <div className={`max-w-[80%] p-4 rounded-3xl ${m.isMe ? "bg-yellow-500 text-black rounded-tr-none" : "bg-zinc-900 text-white rounded-tl-none"}`}>
-                    {!m.isMe && <p className="text-[9px] font-black uppercase mb-1 text-yellow-500">{m.sender}</p>}
-                    <p className="text-sm font-medium">{m.text}</p>
+                  <div className={`max-w-[85%] p-4 rounded-[2rem] ${m.isMe ? "bg-yellow-500 text-black rounded-tr-none" : "bg-zinc-900 text-white rounded-tl-none border border-white/5"}`}>
+                    <p className="text-sm font-medium leading-relaxed">{m.text}</p>
                   </div>
                 </div>
               ))}
             </div>
-            <div className="flex gap-2 items-center bg-zinc-900 p-2 rounded-2xl border border-white/5">
+            <div className="flex gap-2 bg-zinc-900 p-2 rounded-3xl border border-white/10">
               <input 
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-                placeholder="Votre message..." 
-                className="flex-1 bg-transparent px-4 py-2 text-sm outline-none"
+                placeholder="Votre message éminent..." 
+                className="flex-1 bg-transparent px-5 py-3 text-sm outline-none"
               />
-              <button onClick={handleSendMessage} className="bg-yellow-500 p-3 rounded-xl text-black">
-                <Send size={18} strokeWidth={3} />
+              <button onClick={handleSendMessage} className="bg-yellow-500 p-4 rounded-2xl text-black active:scale-90 transition-all">
+                <Send size={20} strokeWidth={3} />
               </button>
             </div>
           </section>
         )}
 
-        {/* --- TV MODE (STYLE TV GARDEN) --- */}
-        {activeTab === "video" && (
-          <section className="h-[85vh] w-full bg-zinc-950 flex flex-col animate-in zoom-in">
-            <div className="relative aspect-video w-full bg-black shadow-2xl">
-              {/* Intégration Flux Vidéo Reel */}
-              <iframe 
-                className="w-full h-full"
-                src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&mute=0&controls=1" 
-                title="GUISOGA LIVE TV"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
-              <div className="absolute top-4 left-4 bg-red-600 px-3 py-1 rounded-full text-[10px] font-bold animate-pulse flex items-center gap-2">
-                <div className="w-2 h-2 bg-white rounded-full"></div> EN DIRECT
-              </div>
-            </div>
-            <div className="p-6">
-              <h2 className="text-2xl font-black text-yellow-500 tracking-tighter uppercase">Guisoga TV Garden</h2>
-              <p className="text-gray-400 text-sm mt-2">Accès premium gratuit. Regardez les meilleurs flux mondiaux sans redirection.</p>
-              <div className="grid grid-cols-2 gap-4 mt-6">
-                <div className="bg-zinc-900 p-4 rounded-2xl border border-yellow-500/20">
-                  <div className="w-8 h-8 bg-yellow-500 rounded-lg mb-2"></div>
-                  <p className="text-[10px] font-bold uppercase">Canal Sport</p>
-                </div>
-                <div className="bg-zinc-900 p-4 rounded-2xl border border-white/5">
-                  <div className="w-8 h-8 bg-zinc-700 rounded-lg mb-2"></div>
-                  <p className="text-[10px] font-bold uppercase">Canal Info</p>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* --- RENCONTRES --- */}
-        {activeTab === "dating" && (
-          <section className="p-4 grid grid-cols-2 gap-4 animate-in slide-in-from-left">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="aspect-[3/4] bg-zinc-900 rounded-3xl relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
-                <div className="absolute bottom-4 left-4">
-                  <p className="font-black text-xs">Utilisateur #{i}</p>
-                  <span className="text-[8px] text-green-500 font-bold uppercase">Connecté</span>
-                </div>
-              </div>
-            ))}
-          </section>
-        )}
       </div>
 
       {/* NAVIGATION BASSE */}
-      <nav className="fixed bottom-0 w-full bg-black/95 backdrop-blur-xl border-t border-zinc-900 px-8 py-4 flex justify-between items-center z-50">
-        <Home className={`cursor-pointer ${activeTab === "home" ? "text-yellow-500 scale-125" : "text-zinc-600"}`} onClick={() => setActiveTab("home")} />
-        <Tv className={`cursor-pointer ${activeTab === "video" ? "text-yellow-500 scale-125" : "text-zinc-600"}`} onClick={() => setActiveTab("video")} />
-        <Users className={`cursor-pointer ${activeTab === "dating" ? "text-yellow-500 scale-125" : "text-zinc-600"}`} onClick={() => setActiveTab("dating")} />
-        <div onClick={() => setActiveTab("home")} className={`w-8 h-8 rounded-full border-2 ${activeTab === "home" ? "border-yellow-500" : "border-zinc-700"}`}>
-          <img src="/icon-512.png" className="w-full h-full rounded-full" />
+      <nav className="fixed bottom-0 w-full bg-black/95 backdrop-blur-xl border-t border-zinc-900 px-10 py-5 flex justify-between items-center z-50">
+        <Home className={`cursor-pointer ${activeTab === "home" ? "text-yellow-500 scale-125" : "text-zinc-700"}`} onClick={() => setActiveTab("home")} />
+        <Tv className={`cursor-pointer ${activeTab === "video" ? "text-yellow-500 scale-125" : "text-zinc-700"}`} onClick={() => setActiveTab("video")} />
+        <Users className={`cursor-pointer ${activeTab === "dating" ? "text-yellow-500 scale-125" : "text-zinc-700"}`} onClick={() => setActiveTab("dating")} />
+        <div onClick={() => setActiveTab("home")} className={`w-8 h-8 rounded-full border-2 ${activeTab === "home" ? "border-yellow-500" : "border-zinc-800"}`}>
+          <img src="/icon-512.png" className="w-full h-full rounded-full object-cover" />
         </div>
       </nav>
     </main>
