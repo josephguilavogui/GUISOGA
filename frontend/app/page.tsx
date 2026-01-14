@@ -2,26 +2,24 @@
 import { useState, useEffect } from "react";
 import { 
   Home, Tv, MessageCircle, Users, Heart, PlusSquare, 
-  Search, Share2, ChevronLeft, Send, X, Play, ShieldCheck, Plus
+  Search, Share2, ChevronLeft, Send, X, Play, ShieldCheck, Plus 
 } from "lucide-react";
 
 export default function GuisogaEmpireElite() {
   const [activeTab, setActiveTab] = useState("home");
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [messages, setMessages] = useState([
-    { id: 1, sender: "Joseph Guilavogui", text: "Bienvenue dans l'élite. Tout est opérationnel.", isMe: false }
+    { id: 1, sender: "Joseph Guilavogui", text: "Bienvenue dans l'élite.", isMe: false }
   ]);
   const [inputValue, setInputValue] = useState("");
   const [showBubble, setShowBubble] = useState(false);
 
-  // Vidéos Directes
   const channels = [
     { id: "jfKfPfyJRdk", name: "Flux Direct 1", desc: "Live 24/7" },
     { id: "5_X_GZp8aLw", name: "Flux Direct 2", desc: "Premium" }
   ];
   const [currentVid, setCurrentVid] = useState(channels[0].id);
 
-  // Bulles Messenger
   useEffect(() => {
     const timer = setTimeout(() => setShowBubble(true), 5000);
     return () => clearTimeout(timer);
@@ -41,7 +39,7 @@ export default function GuisogaEmpireElite() {
       <nav className="sticky top-0 z-50 bg-black/95 border-b border-zinc-900 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           {activeTab !== "home" && (
-            <button onClick={() => setActiveTab("home")} className="p-1 hover:bg-zinc-800 rounded-full">
+            <button onClick={() => setActiveTab("home")} className="p-1 hover:bg-zinc-800 rounded-full transition-all">
               <ChevronLeft className="text-yellow-500" size={28} />
             </button>
           )}
@@ -62,7 +60,7 @@ export default function GuisogaEmpireElite() {
       {showBubble && (
         <div className="fixed top-20 right-4 z-[100] animate-in slide-in-from-right duration-500">
           <div className="bg-yellow-500 text-black p-3 rounded-2xl rounded-tr-none shadow-2xl flex items-center gap-2 border-2 border-black cursor-pointer" onClick={() => {setActiveTab("chat"); setShowBubble(false)}}>
-             <p className="text-[10px] font-black uppercase">Message de Joseph</p>
+             <p className="text-[10px] font-black uppercase">Nouveau message</p>
              <X size={14} onClick={(e) => { e.stopPropagation(); setShowBubble(false); }} />
           </div>
         </div>
@@ -77,7 +75,6 @@ export default function GuisogaEmpireElite() {
             
             {/* BARRE DES STORIES */}
             <div className="flex gap-4 p-4 overflow-x-auto scrollbar-hide border-b border-zinc-900 bg-zinc-950/50">
-              {/* Story "Ajouter" */}
               <div className="flex flex-col items-center gap-1 min-w-[70px]">
                 <div className="w-16 h-16 rounded-full border-2 border-zinc-700 flex items-center justify-center relative bg-zinc-900">
                   <Plus size={24} className="text-zinc-500" />
@@ -87,7 +84,6 @@ export default function GuisogaEmpireElite() {
                 </div>
                 <span className="text-[10px] text-gray-500 font-bold uppercase">Votre story</span>
               </div>
-              {/* Stories des membres (Exemples) */}
               {[1, 2, 3, 4, 5].map((i) => (
                 <div key={i} className="flex flex-col items-center gap-1 min-w-[70px]">
                   <div className="w-16 h-16 rounded-full border-2 border-yellow-500 p-1">
@@ -100,18 +96,16 @@ export default function GuisogaEmpireElite() {
               ))}
             </div>
 
-            {/* MESSAGE BIENVENUE & ABONNEMENT */}
+            {/* SECTION ABONNEMENT SIMPLIFIÉE */}
             <div className="bg-zinc-900/60 m-4 p-6 rounded-[2.5rem] border border-yellow-500/20 text-center">
-              <ShieldCheck className="text-yellow-500 mx-auto mb-2" size={28} />
-              <p className="text-yellow-500 font-black text-[10px] uppercase tracking-widest mb-2">Joseph Guilavogui</p>
-              <h2 className="text-xl font-black mb-6 uppercase italic tracking-tighter">Système d'Analyse Privé</h2>
+              <ShieldCheck className="text-yellow-500 mx-auto mb-4" size={28} />
               <button 
                 onClick={() => setIsSubscribed(!isSubscribed)}
-                className={`w-full font-black py-4 rounded-2xl uppercase text-xs tracking-[0.2em] transition-all ${
-                  isSubscribed ? "bg-zinc-800 text-gray-500 border border-zinc-700" : "bg-white text-black hover:bg-yellow-500"
+                className={`w-full font-black py-4 rounded-2xl uppercase text-xs tracking-[0.2em] transition-all active:scale-95 ${
+                  isSubscribed ? "bg-zinc-800 text-gray-500 border border-zinc-700" : "bg-yellow-500 text-black hover:bg-yellow-400"
                 }`}
               >
-                {isSubscribed ? "ABONNÉ ✓" : "S'ABONNER AU FLUX"}
+                {isSubscribed ? "ABONNÉ ✓" : "S'ABONNER"}
               </button>
             </div>
 
@@ -167,7 +161,7 @@ export default function GuisogaEmpireElite() {
               ))}
             </div>
             <div className="flex gap-2 bg-zinc-900 p-2 rounded-[2rem]">
-              <input value={inputValue} onChange={(e) => setInputValue(e.target.value)} onKeyDown={(e) => e.key === "Enter"} placeholder="Message..." className="flex-1 bg-transparent px-5 outline-none text-sm" />
+              <input value={inputValue} onChange={(e) => setInputValue(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleSendMessage()} placeholder="Message..." className="flex-1 bg-transparent px-5 outline-none text-sm" />
               <button onClick={handleSendMessage} className="bg-yellow-500 p-4 rounded-[1.5rem] text-black"><Send size={20} /></button>
             </div>
           </section>
@@ -179,12 +173,9 @@ export default function GuisogaEmpireElite() {
             {[1, 2, 3, 4].map((i) => (
               <div key={i} className="aspect-[3/4] bg-zinc-900 rounded-[2.5rem] relative overflow-hidden group border border-white/5 shadow-lg">
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
-                <div className="absolute bottom-5 left-5">
-                  <p className="font-black text-[10px] uppercase text-white">Membre Global {i}</p>
-                  <div className="flex items-center gap-1.5 mt-1">
-                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-                    <span className="text-[8px] text-gray-400 font-bold uppercase">En Ligne</span>
-                  </div>
+                <div className="absolute bottom-5 left-5 text-white">
+                  <p className="font-black text-[10px] uppercase">Membre Global {i}</p>
+                  <span className="text-[8px] text-green-500 font-bold uppercase block mt-1">● En Ligne</span>
                 </div>
               </div>
             ))}
@@ -193,7 +184,7 @@ export default function GuisogaEmpireElite() {
       </div>
 
       {/* NAVIGATION BASSE */}
-      <nav className="fixed bottom-0 w-full bg-black/95 backdrop-blur-xl border-t border-zinc-900 px-10 py-5 flex justify-between items-center z-[200]">
+      <nav className="fixed bottom-0 w-full bg-black/95 border-t border-zinc-900 px-10 py-5 flex justify-between items-center z-[200]">
         <Home className={activeTab === "home" ? "text-yellow-500 scale-125" : "text-zinc-700"} onClick={() => setActiveTab("home")} />
         <Tv className={activeTab === "video" ? "text-yellow-500 scale-125" : "text-zinc-700"} onClick={() => setActiveTab("video")} />
         <Users className={activeTab === "dating" ? "text-yellow-500 scale-125" : "text-zinc-700"} onClick={() => setActiveTab("dating")} />
