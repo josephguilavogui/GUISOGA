@@ -8,17 +8,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Style spécifique pour les inputs dorés */
-input:focus {
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
-}
-
-/* Animations de prestige */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.animate-in {
-  animation: fadeIn 0.8s ease-out forwards;
+/* On enlève les styles par défaut des navigateurs pour garder le noir pur */
+input {
+  background-color: #000 !important;
 }
