@@ -2,28 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-:root { --background: #000000; --foreground: #ffffff; }
-
 body {
-  background: black;
-  color: white;
-  font-family: 'Inter', -apple-system, sans-serif;
-  overflow: hidden; /* Important pour éviter les beugs de scroll mobile */
+  background-color: #000000;
+  color: #ffffff;
 }
 
-/* Scroll fluide et masqué */
-.scrollbar-hide::-webkit-scrollbar { display: none; }
-.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-
-/* Effet TikTok */
-.snap-y { scroll-snap-type: y mandatory; }
-.snap-start { scroll-snap-align: start; scroll-snap-stop: always; }
-
-/* Clic réactif */
-button:active, .cursor-pointer:active { transform: scale(0.96); transition: transform 0.1s ease; }
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+input::placeholder {
+  color: #52525b;
 }
-.animate-in { animation: fadeIn 0.5s ease-out forwards; }
+
+/* Animation pour l'entrée dans l'Empire */
+.transition-all {
+  transition: all 0.3s ease-in-out;
+}
