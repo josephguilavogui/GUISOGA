@@ -5,13 +5,22 @@
 body {
   background-color: #000000;
   color: #ffffff;
+  -webkit-font-smoothing: antialiased;
 }
 
 input::placeholder {
-  color: #52525b;
+  color: #3f3f46; /* Gris foncé luxe */
 }
 
-/* Animation pour l'entrée dans l'Empire */
-.transition-all {
-  transition: all 0.3s ease-in-out;
+/* Animations d'excellence */
+.animate-in {
+  animation: slideUp 0.6s ease-out forwards;
 }
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Scrollbar invisible pour un look pur */
+::-webkit-scrollbar { display: none; }
