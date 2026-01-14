@@ -1,176 +1,170 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useRef } from "react";
 import { 
-  Home, Tv, MessageCircle, Users, Heart, Search, 
-  Share2, Send, X, Play, ShieldCheck, Plus, Radio, ChevronLeft
+  Home, Tv, MessageCircle, Heart, Search, 
+  Share2, Send, Play, ShieldCheck, Plus, Radio, Camera, Film, Music
 } from "lucide-react";
 
-export default function GuisogaUltimate() {
+export default function GuisogaEmpireElite() {
   const [activeTab, setActiveTab] = useState("home");
   const [isSubscribed, setIsSubscribed] = useState(false);
-  const [messages, setMessages] = useState([
-    { id: 1, text: "Bienvenue sur votre plateforme privée.", isMe: false },
-    { id: 2, text: "Tout est prêt pour vos Lives.", isMe: false }
-  ]);
-  const [inputValue, setInputValue] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Flux Vidéos (Style TikTok/Reels)
+  // FLUX VIDÉOS VARIÉS (Action, Musique, Humour)
   const feedVideos = [
-    { id: "p68mMDBQRyA", user: "Zee Magic", title: "Bollywood Live" },
-    { id: "4YzrzUc8TAA", user: "Guisoga TV", title: "Direct Spécial" },
-    { id: "jfKfPfyJRdk", user: "Music Pro", title: "Ambiance Empire" }
+    { id: "SKfHpHnr5WY", user: "Ciné Action", title: "Nouveau Film Action 2025", type: "Film" },
+    { id: "gcpq4wDm9gM", user: "Kedjevara", title: "Clip Officiel - Afrobeats", type: "Music" },
+    { id: "dqt14eKqtac", user: "Funny Home", title: "Best Fails 2025", type: "Funny" },
+    { id: "RCgjYlZ34jw", user: "Naza ft SDM", title: "Tout donner", type: "Music" }
   ];
 
-  const handleSendMessage = () => {
-    if (inputValue.trim()) {
-      setMessages([...messages, { id: Date.now(), text: inputValue, isMe: true }]);
-      setInputValue("");
-    }
-  };
+  const handleFileSelect = () => fileInputRef.current?.click();
 
   return (
     <main className="h-screen bg-black text-white font-sans overflow-hidden flex flex-col">
-      
-      {/* BARRE SUPÉRIEURE ÉPURÉE */}
-      <nav className="p-4 flex justify-between items-center bg-black border-b border-zinc-900 z-50">
+      {/* Sélecteur de fichiers invisible pour Stories et Posts */}
+      <input type="file" ref={fileInputRef} className="hidden" accept="image/*,video/*" />
+
+      {/* HEADER PROFESSIONNEL */}
+      <nav className="p-4 flex justify-between items-center bg-zinc-950 border-b border-zinc-900 z-50">
         <h1 className="text-2xl font-black text-yellow-500 italic tracking-tighter">GUISOGA</h1>
         <div className="flex gap-5 items-center">
           <Search size={22} className="text-zinc-400" />
-          <div className="relative cursor-pointer" onClick={() => setActiveTab("chat")}>
+          <div className="relative" onClick={() => setActiveTab("chat")}>
             <MessageCircle size={22} className={activeTab === "chat" ? "text-yellow-500" : "text-zinc-400"} />
-            <span className="absolute -top-1 -right-1 bg-red-600 w-2 h-2 rounded-full"></span>
+            <span className="absolute -top-1 -right-1 bg-red-600 w-2 h-2 rounded-full animate-pulse"></span>
           </div>
         </div>
       </nav>
 
-      {/* CONTENU PRINCIPAL */}
       <div className="flex-1 overflow-y-auto">
         
-        {/* --- MODE FACEBOOK (Accueil + Stories) --- */}
+        {/* --- ACCUEIL STYLE FACEBOOK (Stories + Publications) --- */}
         {activeTab === "home" && (
           <section className="animate-in fade-in pb-20">
-            {/* Stories Style Facebook */}
-            <div className="flex gap-3 p-4 overflow-x-auto scrollbar-hide bg-zinc-950">
-              <div className="min-w-[100px] h-40 bg-zinc-900 rounded-2xl border border-zinc-800 flex flex-col items-center justify-center relative overflow-hidden">
-                <Plus size={30} className="text-yellow-500 mb-2" />
-                <span className="text-[10px] font-bold">CRÉER STORY</span>
+            {/* STORIES INTERACTIVES */}
+            <div className="flex gap-3 p-4 overflow-x-auto scrollbar-hide bg-black">
+              <div 
+                onClick={handleFileSelect}
+                className="min-w-[110px] h-44 bg-zinc-900 rounded-2xl border-2 border-dashed border-zinc-800 flex flex-col items-center justify-center cursor-pointer hover:border-yellow-500 transition-all"
+              >
+                <Camera size={28} className="text-yellow-500 mb-2" />
+                <span className="text-[9px] font-black uppercase">Ma Story</span>
               </div>
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="min-w-[100px] h-40 bg-zinc-800 rounded-2xl relative overflow-hidden">
-                  <div className="absolute top-2 left-2 w-8 h-8 rounded-full border-2 border-yellow-500 overflow-hidden">
-                    <img src={`https://i.pravatar.cc/100?u=${i}`} className="object-cover" />
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="min-w-[110px] h-44 bg-zinc-800 rounded-2xl relative overflow-hidden shadow-xl">
+                  <div className="absolute top-2 left-2 w-9 h-9 rounded-full border-2 border-yellow-500 overflow-hidden z-10">
+                    <img src={`https://i.pravatar.cc/100?u=${i+10}`} className="object-cover" />
                   </div>
-                  <img src={`https://picsum.photos/200/300?random=${i}`} className="w-full h-full object-cover opacity-60" />
+                  <img src={`https://picsum.photos/200/400?random=${i}`} className="w-full h-full object-cover opacity-70" />
+                  <div className="absolute bottom-2 left-2 text-[8px] font-bold uppercase shadow-black">Membre VIP</div>
                 </div>
               ))}
             </div>
 
-            {/* Bouton S'abonner Simple */}
-            <div className="m-4 p-4 bg-zinc-900 rounded-2xl border border-yellow-500/20 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="text-yellow-500" size={20} />
-                <span className="text-xs font-black uppercase">Accès Privé</span>
-              </div>
-              <button 
-                onClick={() => setIsSubscribed(!isSubscribed)}
-                className={`px-6 py-2 rounded-xl text-[10px] font-black transition-all ${
-                  isSubscribed ? "bg-zinc-800 text-gray-500" : "bg-yellow-500 text-black shadow-lg shadow-yellow-500/20"
-                }`}
-              >
-                {isSubscribed ? "ABONNÉ ✓" : "S'ABONNER"}
-              </button>
+            {/* BARRE DE PUBLICATION */}
+            <div className="m-4 p-4 bg-zinc-900 rounded-2xl flex items-center gap-4 cursor-pointer" onClick={handleFileSelect}>
+              <div className="w-10 h-10 rounded-full bg-yellow-500 flex items-center justify-center font-bold text-black text-sm shadow-lg shadow-yellow-500/20">JG</div>
+              <p className="text-zinc-500 text-sm italic">Quoi de neuf, Joseph ?</p>
+              <Plus className="ml-auto text-yellow-500" size={24} />
             </div>
 
-            {/* Posts Classiques */}
-            {[0, 1].map((idx) => (
-              <div key={idx} className="mb-6 border-b border-zinc-900 pb-4">
-                <div className="flex items-center gap-3 p-4">
-                  <div className="w-10 h-10 rounded-full bg-yellow-500 flex items-center justify-center font-bold text-black">G</div>
-                  <div>
-                    <p className="text-xs font-black">GUISOGA OFFICIEL</p>
-                    <p className="text-[8px] text-zinc-500 uppercase">À l'instant</p>
+            {/* FEED DE PUBLICATIONS VIDÉO DIRECTES */}
+            {feedVideos.slice(0, 2).map((vid, idx) => (
+              <div key={idx} className="mb-8 bg-zinc-950 border-y border-zinc-900 pb-4">
+                <div className="flex items-center justify-between p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-full bg-zinc-800 flex items-center justify-center border border-yellow-500/30">
+                      {vid.type === "Film" ? <Film size={16} /> : <Music size={16} />}
+                    </div>
+                    <div>
+                      <p className="text-xs font-black uppercase">{vid.user}</p>
+                      <p className="text-[9px] text-zinc-500">Publication suggérée</p>
+                    </div>
                   </div>
+                  <button onClick={() => setIsSubscribed(!isSubscribed)} className="text-[10px] font-black text-yellow-500 border border-yellow-500/50 px-3 py-1 rounded-full">
+                    {isSubscribed ? "ABONNÉ" : "SUIVRE"}
+                  </button>
                 </div>
-                <div className="aspect-video bg-zinc-900 cursor-pointer" onClick={() => setActiveTab("video")}>
-                   <iframe className="w-full h-full pointer-events-none" src={`https://www.youtube.com/embed/${feedVideos[idx].id}?controls=0&mute=1`} />
+                <div className="aspect-video w-full bg-zinc-900">
+                   <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${vid.id}?controls=1&modestbranding=1`} allowFullScreen />
+                </div>
+                <div className="flex gap-10 p-4 px-6 opacity-80">
+                  <Heart size={22} className="hover:text-red-500 cursor-pointer" />
+                  <MessageCircle size={22} className="cursor-pointer" onClick={() => setActiveTab("chat")} />
+                  <Share2 size={22} className="ml-auto cursor-pointer" />
                 </div>
               </div>
             ))}
           </section>
         )}
 
-        {/* --- MODE TIKTOK (Scroll Vidéo Vertical) --- */}
+        {/* --- MODE TIKTOK TV (Défilement Vertical Infini) --- */}
         {activeTab === "video" && (
           <div className="h-[calc(100vh-140px)] overflow-y-scroll snap-y snap-mandatory scrollbar-hide bg-black">
             {feedVideos.map((vid, idx) => (
-              <section key={idx} className="h-full w-full snap-start relative">
-                <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${vid.id}?autoplay=1&controls=0&loop=1&playlist=${vid.id}`} />
-                <div className="absolute right-4 bottom-20 flex flex-col gap-6">
-                  <Heart size={30} className="hover:text-red-500" />
-                  <MessageCircle size={30} onClick={() => setActiveTab("chat")} />
-                  <Share2 size={30} />
+              <section key={idx} className="h-full w-full snap-start relative flex items-center justify-center">
+                <iframe 
+                  className="w-full h-full object-cover" 
+                  src={`https://www.youtube.com/embed/${vid.id}?autoplay=1&controls=0&loop=1&playlist=${vid.id}&modestbranding=1&rel=0`} 
+                  allow="autoplay"
+                />
+                {/* Interactions TikTok */}
+                <div className="absolute right-4 bottom-28 flex flex-col gap-7 z-20">
+                  <div className="flex flex-col items-center"><Heart size={35} className="text-white drop-shadow-lg" /><span className="text-[10px] mt-1 font-bold">12K</span></div>
+                  <div className="flex flex-col items-center" onClick={() => setActiveTab("chat")}><MessageCircle size={35} className="text-white drop-shadow-lg" /><span className="text-[10px] mt-1 font-bold">450</span></div>
+                  <div className="flex flex-col items-center"><Share2 size={35} className="text-white drop-shadow-lg" /><span className="text-[10px] mt-1 font-bold">Share</span></div>
                 </div>
-                <div className="absolute left-4 bottom-10">
-                  <p className="font-black text-sm">@{vid.user}</p>
-                  <p className="text-xs text-zinc-300">{vid.title}</p>
+                {/* Légende en bas */}
+                <div className="absolute left-4 bottom-16 z-20 max-w-[70%]">
+                  <p className="font-black text-sm drop-shadow-md">@{vid.user} ✓</p>
+                  <p className="text-xs text-white/90 mt-1 line-clamp-2">{vid.title}</p>
+                  <div className="flex items-center gap-2 mt-3">
+                    <div className="bg-red-600 text-white text-[8px] font-black px-2 py-0.5 rounded animate-pulse">EN DIRECT</div>
+                  </div>
                 </div>
               </section>
             ))}
           </div>
         )}
 
-        {/* --- MESSAGERIE (Messenger) --- */}
-        {activeTab === "chat" && (
-          <section className="flex flex-col h-[calc(100vh-140px)] p-4 animate-in slide-in-from-right">
-            <div className="flex-1 overflow-y-auto space-y-4 mb-4">
-              {messages.map((m) => (
-                <div key={m.id} className={`flex ${m.isMe ? "justify-end" : "justify-start"}`}>
-                  <div className={`p-4 rounded-2xl max-w-[80%] ${m.isMe ? "bg-yellow-500 text-black font-bold" : "bg-zinc-900 text-white border border-zinc-800"}`}>
-                    <p className="text-sm">{m.text}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="flex gap-2 bg-zinc-900 p-2 rounded-2xl border border-zinc-800">
-              <input 
-                value={inputValue} 
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-                placeholder="Écrire à Joseph..." 
-                className="flex-1 bg-transparent px-4 outline-none text-sm" 
-              />
-              <button onClick={handleSendMessage} className="bg-yellow-500 p-3 rounded-xl text-black">
-                <Send size={18} />
-              </button>
-            </div>
-          </section>
-        )}
-
-        {/* --- MODE LIVE (TikTok Live) --- */}
+        {/* --- MODE LIVE (Studio Direct) --- */}
         {activeTab === "live" && (
-          <section className="h-full flex flex-col items-center justify-center bg-zinc-950 p-6 text-center animate-in zoom-in">
-            <div className="w-20 h-20 bg-red-600 rounded-full flex items-center justify-center mb-6 animate-pulse shadow-[0_0_30px_rgba(220,38,38,0.3)]">
-              <Radio size={40} />
+          <section className="h-full bg-zinc-950 flex flex-col items-center justify-center p-8 animate-in zoom-in">
+            <div 
+              onClick={handleFileSelect}
+              className="w-24 h-24 bg-red-600 rounded-full flex items-center justify-center mb-8 animate-pulse cursor-pointer shadow-[0_0_50px_rgba(220,38,38,0.4)]"
+            >
+              <Radio size={45} className="text-white" />
             </div>
-            <h2 className="text-2xl font-black uppercase italic italic mb-2">Lancer un Live</h2>
-            <p className="text-xs text-zinc-500 mb-8 max-w-[200px]">Diffusez en direct pour vos abonnés Guisoga.</p>
-            <button className="bg-white text-black font-black px-12 py-4 rounded-full uppercase text-xs tracking-widest hover:bg-yellow-500">
-              DÉMARRER LE DIRECT
+            <h2 className="text-3xl font-black italic uppercase mb-3">Studio Live</h2>
+            <p className="text-zinc-500 text-xs mb-10 max-w-[220px] text-center uppercase tracking-widest">Lancez votre diffusion et interagissez en temps réel.</p>
+            <button 
+              onClick={handleFileSelect}
+              className="bg-white text-black font-black px-14 py-5 rounded-full uppercase text-[10px] tracking-[0.2em] hover:bg-yellow-500 transition-all shadow-xl active:scale-95"
+            >
+              Démarrer le Direct
             </button>
           </section>
         )}
       </div>
 
-      {/* NAVIGATION BASSE (Fixe) */}
-      <nav className="bg-black border-t border-zinc-900 px-8 py-4 flex justify-between items-center z-[100]">
+      {/* NAVIGATION BASSE FIXE (Premium) */}
+      <nav className="bg-black border-t border-zinc-900 px-8 py-5 flex justify-between items-center z-[100] shadow-[0_-10px_20px_rgba(0,0,0,0.5)]">
         <Home className={activeTab === "home" ? "text-yellow-500 scale-125" : "text-zinc-600"} onClick={() => setActiveTab("home")} />
         <Tv className={activeTab === "video" ? "text-yellow-500 scale-125" : "text-zinc-600"} onClick={() => setActiveTab("video")} />
-        <div className="w-12 h-8 bg-zinc-800 rounded-lg flex items-center justify-center border border-zinc-700" onClick={() => setActiveTab("live")}>
-          <Plus size={20} className="text-white" />
+        
+        {/* BOUTON LIVE CENTRAL */}
+        <div 
+          onClick={() => setActiveTab("live")}
+          className="w-14 h-9 bg-zinc-800 rounded-xl flex items-center justify-center border border-zinc-700 hover:border-yellow-500 transition-all shadow-inner"
+        >
+          <Plus size={22} className="text-white" />
         </div>
-        <Users className={activeTab === "users" ? "text-yellow-500 scale-125" : "text-zinc-600"} onClick={() => setActiveTab("home")} />
-        <div onClick={() => setActiveTab("home")} className="w-8 h-8 rounded-full border-2 border-zinc-800 overflow-hidden">
-          <img src="/icon-512.png" className="w-full h-full object-cover" />
+
+        <Users className={activeTab === "dating" ? "text-yellow-500 scale-125" : "text-zinc-600"} onClick={() => setActiveTab("home")} />
+        <div onClick={() => setActiveTab("home")} className="w-9 h-9 rounded-full border-2 border-zinc-800 overflow-hidden shadow-lg shadow-black">
+          <img src="/icon-512.png" className="w-full h-full object-cover" alt="Me" />
         </div>
       </nav>
     </main>
