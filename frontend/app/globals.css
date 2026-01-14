@@ -6,13 +6,15 @@ body {
   background-color: #000000;
   color: #ffffff;
   margin: 0;
-  font-family: 'Inter', sans-serif;
 }
 
-/* Forcer le noir pur sur les champs de saisie */
+/* Force la couleur du texte et évite que le navigateur mette du blanc/gris moche */
 input {
   background-color: #000000 !important;
+  color: #ffffff !important; /* Texte blanc pour la visibilité */
 }
 
-/* Scrollbar invisible pour un look propre */
-::-webkit-scrollbar { display: none; }
+input:-webkit-autofill {
+  -webkit-text-fill-color: #ffffff !important;
+  -webkit-box-shadow: 0 0 0px 1000px #000000 inset !important;
+}
