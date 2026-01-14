@@ -1,135 +1,81 @@
 "use client";
-import { useState, useEffect } from "react";
-import { Lock, Mail, User, LogIn, UserPlus, CheckCircle, Star, Home, MessageCircle, Video, Menu, Plus, Heart, Share2 } from "lucide-react";
+import { useState } from "react";
+import { Lock, Mail, User, Home, MessageCircle, Video, Menu, Plus, Heart, Share2, Star } from "lucide-react";
 
-export default function GuisogaSystem() {
-  const [view, setView] = useState("login"); // login, signup, home
-  const [userProfile, setUserProfile] = useState({ firstName: "", lastName: "" });
-  const [formData, setFormData] = useState({ firstName: "", lastName: "", email: "", password: "" });
+export default function GuisogaEmpire() {
+  const [step, setStep] = useState("login"); // login, signup, home
+  const [user, setUser] = useState({ nom: "", prenom: "" });
 
-  // Fonction pour Créer un Compte
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSignup = (e: any) => {
     e.preventDefault();
-    if (formData.firstName && formData.lastName) {
-      setUserProfile({ firstName: formData.firstName, lastName: formData.lastName });
-      setView("home"); // Redirection directe après création
-    }
+    setStep("home");
   };
 
-  // Fonction pour Connexion
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (userProfile.firstName) {
-      setView("home");
-    } else {
-      alert("Aucun compte trouvé. Veuillez d'abord Créer un compte.");
-      setView("signup");
-    }
-  };
-
-  // --- INTERFACE DE CONNEXION / CRÉATION ---
-  if (view === "login" || view === "signup") {
+  if (step === "login" || step === "signup") {
     return (
       <div className="min-h-screen bg-black flex flex-col lg:flex-row items-center justify-center p-6 font-sans">
-        <div className="lg:w-1/2 text-center lg:text-left mb-12 lg:mb-0 lg:pr-10 animate-in">
-          <h1 className="text-7xl lg:text-9xl font-black text-yellow-500 italic tracking-tighter mb-4 drop-shadow-[0_0_30px_rgba(234,179,8,0.3)]">
+        {/* GAUCHE : LOGO ET MESSAGE DE JOSEPH GUILAVOGUI */}
+        <div className="lg:w-1/2 text-center lg:text-left mb-12 lg:mb-0">
+          <h1 className="text-7xl lg:text-9xl font-black text-[#D4AF37] italic tracking-tighter mb-2 drop-shadow-[0_0_15px_rgba(212,175,55,0.4)]">
             GUISOGA
           </h1>
-          <h2 className="text-2xl lg:text-3xl font-bold text-white mb-4 uppercase tracking-tighter">
-            L'EMPIRE DE JOSEPH GUILAVOGUI
+          <h2 className="text-xl lg:text-2xl font-bold text-white mb-4 uppercase tracking-[0.2em]">
+            BIENVENUE DANS L’EMPIRE DE JOSEPH GUILAVOGUI
           </h2>
-          <p className="text-zinc-500 text-lg font-light tracking-[0.3em]">EXCELLENCE & PRESTIGE</p>
+          <p className="text-[#D4AF37]/60 text-sm font-bold tracking-[0.4em] uppercase">Excellence & Prestige</p>
         </div>
 
-        <div className="lg:w-[450px] w-full animate-in">
-          <div className="bg-zinc-900/80 backdrop-blur-xl p-8 rounded-[32px] shadow-2xl border border-zinc-800">
-            <form onSubmit={view === "login" ? handleLogin : handleSignup} className="space-y-4">
-              {view === "signup" && (
+        {/* DROITE : LE BLOC DE CONNEXION NOIR & DORÉ */}
+        <div className="lg:w-[450px] w-full">
+          <div className="bg-[#111] p-8 rounded-[30px] border border-[#D4AF37]/30 shadow-[0_0_50px_rgba(0,0,0,1)]">
+            <form onSubmit={handleSignup} className="space-y-4">
+              {step === "signup" && (
                 <div className="flex gap-4">
-                  <input required type="text" placeholder="Prénom" className="w-1/2 bg-black border border-zinc-700 text-white p-4 rounded-2xl focus:border-yellow-500 outline-none" onChange={(e) => setFormData({...formData, firstName: e.target.value})} />
-                  <input required type="text" placeholder="Nom" className="w-1/2 bg-black border border-zinc-700 text-white p-4 rounded-2xl focus:border-yellow-500 outline-none" onChange={(e) => setFormData({...formData, lastName: e.target.value})} />
+                  <input required type="text" placeholder="Prénom" className="w-1/2 bg-black border border-zinc-800 text-white p-4 rounded-xl focus:border-[#D4AF37] outline-none" onChange={(e)=>setUser({...user, prenom: e.target.value})}/>
+                  <input required type="text" placeholder="Nom" className="w-1/2 bg-black border border-zinc-800 text-white p-4 rounded-xl focus:border-[#D4AF37] outline-none" onChange={(e)=>setUser({...user, nom: e.target.value})}/>
                 </div>
               )}
-              <div className="relative">
-                <Mail className="absolute left-4 top-4 text-zinc-600" size={20} />
-                <input required type="email" placeholder="Adresse e-mail" className="w-full bg-black border border-zinc-700 text-white p-4 pl-12 rounded-2xl focus:border-yellow-500 outline-none" />
-              </div>
-              <div className="relative">
-                <Lock className="absolute left-4 top-4 text-zinc-600" size={20} />
-                <input required type="password" placeholder="Mot de passe" className="w-full bg-black border border-zinc-700 text-white p-4 pl-12 rounded-2xl focus:border-yellow-500 outline-none" />
-              </div>
-
-              <button type="submit" className="w-full bg-yellow-500 text-black font-black py-5 rounded-2xl text-xl hover:bg-yellow-400 transition-all shadow-lg shadow-yellow-500/20 active:scale-95">
-                {view === "login" ? "CONNEXION" : "REJOINDRE L'EMPIRE"}
+              <input required type="email" placeholder="Adresse e-mail" className="w-full bg-black border border-zinc-800 text-white p-4 rounded-xl focus:border-[#D4AF37] outline-none" />
+              <input required type="password" placeholder="Mot de passe" className="w-full bg-black border border-zinc-800 text-white p-4 rounded-xl focus:border-[#D4AF37] outline-none" />
+              
+              <button className="w-full bg-gradient-to-r from-[#D4AF37] to-[#AA8A2E] text-black font-black py-4 rounded-xl text-lg hover:brightness-110 transition-all active:scale-95 shadow-[0_5px_15px_rgba(212,175,55,0.3)]">
+                {step === "login" ? "CONNEXION" : "CRÉER MON COMPTE"}
               </button>
 
-              <div className="text-center">
-                <span className="text-zinc-500 text-sm">
-                  {view === "login" ? "Pas encore membre ?" : "Déjà un compte ?"}
-                </span>
-                <button type="button" onClick={() => setView(view === "login" ? "signup" : "login")} className="ml-2 text-yellow-500 font-bold hover:underline">
-                  {view === "login" ? "Créer nouveau compte" : "Se connecter"}
+              <div className="text-center text-sm">
+                <button type="button" onClick={() => setStep(step === "login" ? "signup" : "login")} className="text-[#D4AF37] font-bold hover:underline">
+                  {step === "login" ? "Créer nouveau compte" : "Déjà membre ? Se connecter"}
                 </button>
               </div>
             </form>
           </div>
-          <p className="text-zinc-600 text-center mt-8 text-xs font-bold tracking-widest uppercase">
-            Créer une Page pour votre Communauté et Viser plus loin.
+          <p className="text-[#D4AF37]/40 text-center mt-8 text-xs font-bold tracking-widest leading-loose">
+            CRÉER UNE PAGE POUR VOTRE COMMUNAUTÉ ET VISER PLUS LOIN.
           </p>
         </div>
       </div>
     );
   }
 
-  // --- ÉCRAN D'ACCUEIL APRÈS CONNEXION ---
+  // ACCUEIL APRÈS CONNEXION
   return (
-    <main className="h-screen bg-black text-white flex flex-col overflow-hidden">
-      {/* HEADER */}
-      <nav className="p-4 bg-zinc-900 border-b border-zinc-800 flex justify-between items-center">
-        <h1 className="text-2xl font-black text-yellow-500 italic">GUISOGA</h1>
+    <div className="min-h-screen bg-black text-white flex flex-col">
+      <nav className="p-4 bg-[#111] border-b border-[#D4AF37]/20 flex justify-between items-center sticky top-0 z-50">
+        <h1 className="text-2xl font-black text-[#D4AF37] italic">GUISOGA</h1>
         <div className="flex items-center gap-3">
-          <span className="text-xs font-black uppercase text-yellow-500 tracking-tighter">
-            {userProfile.firstName} {userProfile.lastName}
-          </span>
-          <div className="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center text-black font-black uppercase">
-            {userProfile.firstName[0]}
-          </div>
+          <span className="text-xs font-bold uppercase tracking-widest text-[#D4AF37]">{user.prenom} {user.nom}</span>
+          <div className="w-10 h-10 bg-[#D4AF37] rounded-full flex items-center justify-center text-black font-black">{user.prenom[0]}</div>
         </div>
       </nav>
-
-      {/* FEED (Même style que Facebook mais Noir/Or) */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-6">
-        <div className="bg-zinc-900 p-6 rounded-[24px] border border-zinc-800">
-           <h3 className="text-xl font-black mb-2">Bonjour, {userProfile.firstName} !</h3>
-           <p className="text-zinc-400">Prêt à bâtir l'excellence aujourd'hui dans l'Empire de Joseph Guilavogui ?</p>
-        </div>
-        
-        {/* POST EXEMPLE */}
-        <div className="bg-zinc-900 rounded-[24px] border border-zinc-800 overflow-hidden">
-          <div className="p-4 flex items-center gap-3">
-            <div className="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center text-black font-bold">JG</div>
-            <div>
-              <p className="font-black text-sm">JOSEPH GUILAVOGUI <Star size={12} className="inline text-yellow-500 fill-yellow-500" /></p>
-              <p className="text-[10px] text-zinc-500 uppercase font-bold">Fondateur • En ligne</p>
-            </div>
-          </div>
-          <div className="h-64 bg-zinc-800 flex items-center justify-center text-zinc-700 italic">Publication de l'Empire...</div>
-          <div className="p-4 flex justify-around border-t border-zinc-800">
-            <Heart size={20} className="text-zinc-500" />
-            <MessageCircle size={20} className="text-zinc-500" />
-            <Share2 size={20} className="text-zinc-500" />
-          </div>
+      <div className="flex-1 p-4 max-w-2xl mx-auto w-full">
+        <div className="bg-[#111] p-6 rounded-3xl border border-zinc-800 mb-6">
+          <h2 className="text-2xl font-black mb-2 italic">BIENVENUE DANS VOTRE EMPIRE, {user.prenom} !</h2>
+          <p className="text-zinc-500 text-sm">Votre succès commence ici chez GUISOGA.</p>
         </div>
       </div>
-
-      {/* BARRE NAV BAS */}
-      <nav className="bg-zinc-900 border-t border-zinc-800 p-4 flex justify-around">
-        <Home className="text-yellow-500" />
-        <Video className="text-zinc-600" />
-        <Plus className="bg-white text-black rounded-lg p-1" />
-        <MessageCircle className="text-zinc-600" />
-        <Menu className="text-zinc-600" />
+      <nav className="bg-[#111] border-t border-[#D4AF37]/20 p-4 flex justify-around sticky bottom-0">
+        <Home className="text-[#D4AF37]" /> <Video className="text-zinc-600" /> <Plus className="bg-white text-black rounded-lg" /> <MessageCircle className="text-zinc-600" /> <Menu className="text-zinc-600" />
       </nav>
-    </main>
+    </div>
   );
 }
