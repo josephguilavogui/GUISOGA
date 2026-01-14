@@ -1,194 +1,147 @@
 "use client";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import { 
   Home, MessageCircle, Heart, Search, Share2, Plus, 
-  MessageSquare, Globe, X, Video, Radio, Play, CheckCircle, Star,
-  Image as ImageIcon, User, LogIn, UserPlus, ShieldCheck, Zap
+  MessageSquare, Video, Play, CheckCircle, Star,
+  Image as ImageIcon, LogIn, UserPlus, ShieldCheck, Zap, Menu
 } from "lucide-react";
 
-export default function GuisogaMVP() {
-  const [step, setStep] = useState("auth"); // auth, empire
-  const [activeTab, setActiveTab] = useState("home"); 
-  const [hasMounted, setHasMounted] = useState(false);
-  const [playingId, setPlayingId] = useState<string | null>(null);
+export default function GuisogaFacebookClone() {
+  const [user, setUser] = useState<any>(null);
+  const [posts, setPosts] = useState<any[]>([]);
+  const [stories, setStories] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState("home");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // --- 1. ALGORITHME TRANSPARENT (MVP) ---
-  // Au lieu d'un chaos, on trie par "Interêt" et "Temps"
-  const [feed, setFeed] = useState(() => Array.from({ length: 10 }, (_, i) => ({
-    id: `post-${i}`,
-    author: i % 2 === 0 ? "Joseph Guilavogui" : `Expert Empire ${i}`,
-    content: i % 3 === 0 ? "L'éthique est le futur des réseaux sociaux. 🔐" : "Nouveau projet validé sur la plateforme.",
-    videoId: i % 2 === 0 ? "RCgjYlZ34jw" : "SKfHpHnr5WY",
-    likes: Math.floor(Math.random() * 1000),
-    category: i % 2 === 0 ? "Business" : "Tech"
-  })));
-
-  useEffect(() => { setHasMounted(true); }, []);
-
-  // --- 2. SCROLL INFINI (Performance optimisée) ---
-  const handleScroll = useCallback((e: any) => {
-    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
-    if (scrollHeight - scrollTop <= clientHeight + 100) {
-      const more = Array.from({ length: 5 }, (_, i) => ({
-        id: `post-${feed.length + i}`,
-        author: `Membre ${feed.length + i}`,
-        content: "Contenu généré par l'algorithme éthique.",
-        videoId: "gcpq4wDm9gM",
-        likes: 50,
-        category: "Nouveauté"
-      }));
-      setFeed(prev => [...prev, ...more]);
+  // CHARGEMENT INITIAL : Vérifie si un compte existe déjà
+  useEffect(() => {
+    const savedUser = localStorage.getItem("guisoga_user");
+    const savedPosts = localStorage.getItem("guisoga_posts");
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+      setIsAuthenticated(true);
     }
-  }, [feed.length]);
+    if (savedPosts) {
+      setPosts(JSON.parse(savedPosts));
+    } else {
+      // Posts par défaut si vide
+      setPosts([
+        { id: 1, author: "Guisoga Cinema", content: "L'empire ne dort jamais. 🌍", videoId: "RCgjYlZ34jw", likes: 1200 },
+        { id: 2, author: "Joseph Guilavogui", content: "Bienvenue sur votre réseau éthique.", likes: 850 }
+      ]);
+    }
+  }, []);
 
-  if (!hasMounted) return <div className="bg-zinc-950 min-h-screen" />;
+  // FONCTION : CRÉER UN COMPTE (PERMANENT)
+  const handleSignUp = () => {
+    const newUser = { name: "Joseph Guilavogui", id: Date.now() };
+    localStorage.setItem("guisoga_user", JSON.stringify(newUser));
+    setUser(newUser);
+    setIsAuthenticated(true);
+  };
 
-  // --- ÉCRAN D'AUTHENTIFICATION (Phase 1) ---
-  if (step === "auth") {
+  // FONCTION : PUBLIER (RETOUR IMMÉDIAT)
+  const handlePublish = () => {
+    const text = prompt("Que voulez-vous dire à l'Empire ?");
+    if (text) {
+      const newPost = {
+        id: Date.now(),
+        author: user.name,
+        content: text,
+        likes: 0,
+        timestamp: "À l'instant"
+      };
+      const updatedPosts = [newPost, ...posts];
+      setPosts(updatedPosts);
+      localStorage.setItem("guisoga_posts", JSON.stringify(updatedPosts));
+    }
+  };
+
+  if (!isAuthenticated) {
     return (
-      <div className="h-screen bg-zinc-950 flex flex-col items-center justify-center p-8 animate-in zoom-in duration-500">
-        <div className="mb-12 text-center">
-          <h1 className="text-6xl font-black text-yellow-500 italic tracking-tighter">GUISOGA</h1>
-          <div className="flex items-center justify-center gap-2 mt-2 text-zinc-500">
-            <ShieldCheck size={16} /> <span className="text-[10px] font-bold uppercase tracking-widest">Social Éthique & Privé</span>
-          </div>
-        </div>
-        
+      <div className="h-screen bg-black flex flex-col items-center justify-center p-6 text-white">
+        <h1 className="text-6xl font-black text-yellow-500 italic mb-8">GUISOGA</h1>
         <div className="w-full max-w-sm space-y-4">
-          <input className="w-full bg-zinc-900 border border-zinc-800 rounded-2xl py-4 px-6 outline-none focus:border-yellow-500 text-sm" placeholder="Nom d'utilisateur" />
-          <input type="password" className="w-full bg-zinc-900 border border-zinc-800 rounded-2xl py-4 px-6 outline-none focus:border-yellow-500 text-sm" placeholder="Mot de passe" />
-          
-          <button onClick={() => setStep("empire")} className="w-full bg-yellow-500 text-black font-black py-4 rounded-2xl flex items-center justify-center gap-2 active:scale-95 transition-all">
-            ENTRER DANS L'EMPIRE <LogIn size={20} />
+          <button onClick={handleSignUp} className="w-full bg-yellow-500 text-black font-black py-4 rounded-2xl flex items-center justify-center gap-2">
+            CRÉER MON COMPTE EMPIRE <UserPlus size={20} />
           </button>
-
-          <button className="w-full bg-zinc-800 text-white font-black py-4 rounded-2xl border border-zinc-700 flex items-center justify-center gap-2 active:scale-95 transition-all">
-            CRÉER UN COMPTE <UserPlus size={20} />
-          </button>
+          <p className="text-[10px] text-zinc-500 text-center">Une fois créé, vous n'aurez plus à vous reconnecter.</p>
         </div>
-        <p className="mt-8 text-zinc-600 text-[10px] text-center max-w-xs">
-          En rejoignant Guisoga, vous reprenez le contrôle de vos données et de votre temps.
-        </p>
       </div>
     );
   }
 
-  // --- INTERFACE EMPIRE (MVP FONCTIONNEL) ---
   return (
-    <main className="h-screen bg-zinc-950 text-white flex flex-col overflow-hidden">
-      <input type="file" ref={fileInputRef} className="hidden" />
-
-      {/* HEADER PREMIUM */}
-      <header className="p-4 flex justify-between items-center bg-zinc-900/50 backdrop-blur-md border-b border-zinc-800 z-50">
-        <div className="flex items-center gap-2">
-           <div className="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center text-black font-black italic">G</div>
-           <h2 className="text-xl font-black tracking-tighter">GUISOGA</h2>
-        </div>
-        <div className="flex gap-3">
-          <div className="p-2 bg-zinc-800 rounded-full hover:bg-yellow-500 hover:text-black transition-all cursor-pointer"><Search size={20} /></div>
-          <div className="p-2 bg-zinc-800 rounded-full cursor-pointer" onClick={() => setActiveTab("messenger")}><MessageCircle size={20} /></div>
+    <main className="h-screen bg-black text-white flex flex-col overflow-hidden">
+      {/* HEADER TYPE FACEBOOK */}
+      <header className="p-4 flex justify-between items-center bg-zinc-900 border-b border-zinc-800">
+        <h2 className="text-2xl font-black text-yellow-500 italic">GUISOGA</h2>
+        <div className="flex gap-4">
+          <Search size={24} className="text-zinc-400" />
+          <MessageCircle size={24} className="text-zinc-400" onClick={() => setActiveTab("messenger")} />
         </div>
       </header>
 
-      {/* CONTENU PRINCIPAL */}
-      <div className="flex-1 overflow-y-auto scrollbar-hide" onScroll={handleScroll}>
-        {activeTab === "home" && (
-          <div className="pb-24">
-            {/* STORIES SÉLECTIONNÉES */}
-            <div className="flex gap-3 p-4 bg-zinc-950 overflow-x-auto scrollbar-hide">
-              <div className="min-w-[100px] h-40 bg-zinc-900 rounded-2xl border-2 border-dashed border-zinc-800 flex flex-col items-center justify-center text-zinc-500 hover:border-yellow-500 cursor-pointer" onClick={() => fileInputRef.current?.click()}>
-                <Plus size={28} />
-                <span className="text-[9px] font-black mt-2 uppercase">Story</span>
-              </div>
-              {[1, 2, 3].map(i => (
-                <div key={i} className="min-w-[100px] h-40 bg-zinc-800 rounded-2xl relative overflow-hidden border border-zinc-700">
-                  <img src={`https://picsum.photos/200/400?random=${i}`} className="w-full h-full object-cover opacity-40" />
-                  <div className="absolute top-2 left-2 w-8 h-8 rounded-full border-2 border-yellow-500 bg-black" />
-                </div>
-              ))}
+      {/* ZONE DE CONTENU */}
+      <div className="flex-1 overflow-y-auto pb-24">
+        {/* STORIES (image_b59a51) */}
+        <div className="flex gap-2 p-4 overflow-x-auto scrollbar-hide bg-zinc-950">
+          <div className="min-w-[110px] h-44 bg-zinc-800 rounded-xl flex flex-col items-center justify-center border-2 border-dashed border-zinc-700 cursor-pointer" onClick={() => alert("Fonction Story activée")}>
+            <Plus className="text-yellow-500" size={32} />
+            <span className="text-[10px] font-bold uppercase mt-2">Créer Story</span>
+          </div>
+          {[1, 2, 3].map(i => (
+            <div key={i} className="min-w-[110px] h-44 bg-zinc-900 rounded-xl relative overflow-hidden">
+               <img src={`https://picsum.photos/200/400?random=${i}`} className="w-full h-full object-cover opacity-50" />
             </div>
-
-            {/* FLUX ÉTHIQUE (Pas de chaos, trié par pertinence) */}
-            {feed.map(post => (
-              <div key={post.id} className="bg-zinc-900/40 mb-2 border-y border-zinc-900 animate-in fade-in slide-in-from-bottom-4">
-                <div className="p-4 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-zinc-800 border border-yellow-500" />
-                    <div>
-                      <div className="flex items-center gap-1">
-                        <span className="text-xs font-black">{post.author}</span>
-                        <CheckCircle size={12} className="text-blue-500 fill-blue-500" />
-                      </div>
-                      <span className="text-[8px] bg-zinc-800 px-2 py-0.5 rounded-full text-zinc-400 font-bold uppercase">{post.category}</span>
-                    </div>
-                  </div>
-                </div>
-                <p className="px-4 pb-4 text-sm text-zinc-300 leading-relaxed">{post.content}</p>
-                
-                <div className="aspect-video bg-black relative group">
-                  <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${post.videoId}?autoplay=${playingId === post.id ? 1 : 0}&mute=0&controls=1`} />
-                  {!playingId && (
-                    <div className="absolute inset-0 flex items-center justify-center cursor-pointer" onClick={() => setPlayingId(post.id)}>
-                      <div className="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center text-black shadow-2xl active:scale-90 transition-all"><Play size={32} fill="currentColor" /></div>
-                    </div>
-                  )}
-                </div>
-
-                <div className="p-4 flex justify-between">
-                  <div className="flex gap-8">
-                    <div className="flex items-center gap-2 cursor-pointer hover:text-red-500"><Heart size={24} /> <span className="text-xs font-bold">{post.likes}</span></div>
-                    <div className="flex items-center gap-2 cursor-pointer hover:text-yellow-500"><MessageSquare size={24} /> <span className="text-xs font-bold text-zinc-500">Réagir</span></div>
-                  </div>
-                  <Share2 size={24} className="text-zinc-600 hover:text-white cursor-pointer" />
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* SECTION REELS (TIKTOK CLONE) */}
-        {activeTab === "video" && (
-          <div className="h-full snap-y snap-mandatory overflow-y-scroll scrollbar-hide bg-black">
-            {feed.map(v => (
-              <div key={v.id} className="h-full w-full snap-start relative">
-                <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${v.videoId}?autoplay=1&controls=0&loop=1&playlist=${v.videoId}`} />
-                <div className="absolute right-4 bottom-32 flex flex-col gap-6 items-center">
-                  <div className="flex flex-col items-center"><div className="p-4 bg-zinc-900/60 rounded-full backdrop-blur-md border border-white/10"><Heart size={30} /></div></div>
-                  <div className="flex flex-col items-center"><div className="p-4 bg-zinc-900/60 rounded-full backdrop-blur-md border border-white/10"><MessageCircle size={30} /></div></div>
-                </div>
-                <div className="absolute left-4 bottom-32">
-                  <p className="text-yellow-500 font-black text-xl italic">@{v.author}</p>
-                  <p className="text-sm text-zinc-200 mt-1">{v.content}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* BARRE DE NAVIGATION (Simplifiée & Rapide) */}
-      <nav className="bg-zinc-900 border-t border-zinc-800 px-6 py-4 flex justify-between items-center z-[100] shadow-2xl">
-        <NavButton icon={<Home />} label="Empire" active={activeTab === "home"} onClick={() => setActiveTab("home")} />
-        <NavButton icon={<Globe />} label="Match" active={activeTab === "match"} onClick={() => setActiveTab("match")} />
-        
-        {/* POSTER (MVP central) */}
-        <div onClick={() => fileInputRef.current?.click()} className="w-14 h-11 bg-white rounded-2xl flex items-center justify-center text-black shadow-lg shadow-white/10 active:scale-90 transition-all cursor-pointer">
-          <Plus size={28} strokeWidth={3} />
+          ))}
         </div>
 
-        <NavButton icon={<Video />} label="Vidéos" active={activeTab === "video"} onClick={() => setActiveTab("video")} />
-        <NavButton icon={<Zap />} label="Market" active={activeTab === "market"} onClick={() => setActiveTab("market")} />
+        {/* BARRE DE PUBLICATION (image_b59a51) */}
+        <div className="p-4 bg-zinc-900 border-y border-zinc-800 flex items-center gap-4">
+          <div className="w-10 h-10 rounded-full bg-yellow-500 flex items-center justify-center text-black font-bold">J</div>
+          <button onClick={handlePublish} className="flex-1 bg-zinc-800 text-left px-5 py-2.5 rounded-full text-zinc-500 text-sm">
+            Quoi de neuf Joseph ?
+          </button>
+          <ImageIcon className="text-green-500" size={24} />
+        </div>
+
+        {/* FLUX DE PUBLICATIONS (VRAIS RETOURS) */}
+        {posts.map(post => (
+          <div key={post.id} className="bg-zinc-900 mt-2 border-y border-zinc-800 p-4 animate-in fade-in duration-500">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-zinc-800 border border-yellow-500" />
+              <div>
+                <p className="text-sm font-black uppercase">{post.author}</p>
+                <p className="text-[10px] text-zinc-500 italic">Certifié Empire</p>
+              </div>
+            </div>
+            <p className="text-sm mb-4 leading-relaxed">{post.content}</p>
+            {post.videoId && (
+              <div className="aspect-video bg-black rounded-xl overflow-hidden mb-4">
+                <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${post.videoId}`} />
+              </div>
+            )}
+            <div className="flex justify-between border-t border-zinc-800 pt-4">
+              <div className="flex gap-6">
+                <div className="flex items-center gap-2 cursor-pointer hover:text-red-500"><Heart size={22} /> <span className="text-xs font-bold">{post.likes}</span></div>
+                <div className="flex items-center gap-2 cursor-pointer hover:text-yellow-500"><MessageSquare size={22} /> <span className="text-xs font-bold">Commenter</span></div>
+              </div>
+              <Share2 size={22} className="text-zinc-500" />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* NAVIGATION BASSE (image_b5b857) */}
+      <nav className="fixed bottom-0 w-full bg-zinc-900 border-t border-zinc-800 flex justify-around p-4 z-50">
+        <Home className={activeTab === "home" ? "text-yellow-500" : "text-zinc-500"} onClick={() => setActiveTab("home")} />
+        <Zap className={activeTab === "match" ? "text-yellow-500" : "text-zinc-500"} onClick={() => setActiveTab("match")} />
+        <div className="bg-white text-black rounded-xl p-1" onClick={handlePublish}><Plus size={28} /></div>
+        <Video className={activeTab === "video" ? "text-yellow-500" : "text-zinc-500"} onClick={() => setActiveTab("video")} />
+        <Menu className={activeTab === "menu" ? "text-yellow-500" : "text-zinc-500"} onClick={() => setActiveTab("menu")} />
       </nav>
     </main>
-  );
-}
-
-function NavButton({ icon, label, active, onClick }: any) {
-  return (
-    <button onClick={onClick} className={`flex flex-col items-center gap-1 transition-all ${active ? "text-yellow-500 scale-110" : "text-zinc-500 hover:text-zinc-300"}`}>
-      {icon}
-      <span className="text-[7px] font-black uppercase tracking-tighter">{label}</span>
-    </button>
   );
 }
