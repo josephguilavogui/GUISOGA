@@ -5,10 +5,14 @@
 body {
   background-color: #000000;
   color: #ffffff;
-  overflow-x: hidden;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
 }
 
-/* On enlève les styles par défaut des navigateurs pour garder le noir pur */
+/* Forcer le noir pur sur les champs de saisie */
 input {
-  background-color: #000 !important;
+  background-color: #000000 !important;
 }
+
+/* Scrollbar invisible pour un look propre */
+::-webkit-scrollbar { display: none; }
