@@ -1,157 +1,132 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { 
   Home, Tv, MessageCircle, Users, Heart, Search, 
-  Share2, ChevronLeft, Send, X, Play, ShieldCheck, Plus, Camera 
+  Share2, Send, Play, ShieldCheck, Plus, Camera, DollarSign, Radio
 } from "lucide-react";
 
-export default function GuisogaEmpireElite() {
+export default function GuisogaTikTokEmpire() {
   const [activeTab, setActiveTab] = useState("home");
   const [isSubscribed, setIsSubscribed] = useState(false);
-  const [messages, setMessages] = useState([{ id: 1, text: "Bienvenue dans l'élite.", isMe: false }]);
-  const [inputValue, setInputValue] = useState("");
-  const [showBubble, setShowBubble] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  // Système de monétisation (Portefeuille fictif pour commencer)
+  const [earnings, setEarnings] = useState(0.00);
 
-  // Vidéos Zee Magic et Flux Premium
-  const channels = [
-    { id: "p68mMDBQRyA", name: "ZEE MAGIC", desc: "Séries Bollywood" },
-    { id: "4YzrzUc8TAA", name: "ZEE MAGIC 2", desc: "Guddan & Plus" },
-    { id: "jfKfPfyJRdk", name: "LOFI MUSIC", desc: "Détente 24/7" }
+  // Vidéos style TikTok (Scroll vertical)
+  const feedVideos = [
+    { id: "p68mMDBQRyA", title: "Zee Magic Live", user: "Guisoga TV", likes: "12K" },
+    { id: "4YzrzUc8TAA", title: "Guddan Episode", user: "Zee Magic", likes: "45K" },
+    { id: "jfKfPfyJRdk", title: "Lofi Beats 24/7", user: "Relax Station", likes: "8K" }
   ];
-  const [currentVid, setCurrentVid] = useState(channels[0].id);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setShowBubble(true), 5000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleSendMessage = () => {
-    if (inputValue.trim()) {
-      setMessages([...messages, { id: Date.now(), text: inputValue, isMe: true }]);
-      setInputValue("");
-    }
-  };
-
-  // Fonction pour déclencher l'ajout de story
-  const triggerFileSelect = () => {
-    if (fileInputRef.current) fileInputRef.current.click();
+  const triggerLive = () => {
+    alert("Démarrage du Studio LIVE Guisoga... (Connexion caméra en cours)");
   };
 
   return (
-    <main className="min-h-screen bg-black text-white font-sans pb-24 overflow-x-hidden">
-      {/* Input caché pour les stories */}
-      <input type="file" ref={fileInputRef} className="hidden" accept="image/*,video/*" onChange={() => alert("Story chargée avec succès !")} />
-
-      {/* BARRE SUPÉRIEURE */}
-      <nav className="sticky top-0 z-50 bg-black/95 border-b border-zinc-900 px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          {activeTab !== "home" && (
-            <button onClick={() => setActiveTab("home")} className="p-1"><ChevronLeft className="text-yellow-500" size={28} /></button>
-          )}
-          <h1 className="text-2xl font-black text-yellow-500 italic">GUISOGA</h1>
+    <main className="h-screen bg-black text-white font-sans overflow-hidden flex flex-col">
+      
+      {/* BARRE SUPÉRIEURE : MONÉTISATION & RECHERCHE */}
+      <nav className="p-4 flex justify-between items-center bg-black/50 backdrop-blur-md z-50">
+        <div className="flex items-center gap-2 bg-zinc-900 px-3 py-1 rounded-full border border-yellow-500/50">
+          <DollarSign size={14} className="text-yellow-500" />
+          <span className="text-xs font-black">{earnings.toFixed(2)} €</span>
         </div>
+        <h1 className="text-xl font-black text-yellow-500 italic tracking-tighter">GUISOGA</h1>
         <div className="flex gap-4">
-          <Search className="text-gray-400" />
-          <MessageCircle className={activeTab === "chat" ? "text-yellow-500" : "text-gray-400"} onClick={() => setActiveTab("chat")} />
+          <Search size={22} />
+          <Radio size={22} className="text-red-500 animate-pulse cursor-pointer" onClick={triggerLive} />
         </div>
       </nav>
 
-      <div className="w-full">
-        {/* --- ACCUEIL --- */}
-        {activeTab === "home" && (
-          <section className="animate-in fade-in">
-            {/* STORIES INTERACTIVES */}
-            <div className="flex gap-4 p-4 overflow-x-auto scrollbar-hide border-b border-zinc-900">
-              <div className="flex flex-col items-center gap-1 min-w-[70px] cursor-pointer" onClick={triggerFileSelect}>
-                <div className="w-16 h-16 rounded-full border-2 border-dashed border-zinc-700 flex items-center justify-center bg-zinc-900">
-                  <Camera size={24} className="text-zinc-500" />
+      {/* ZONE DE CONTENU PRINCIPAL */}
+      <div className="flex-1 overflow-y-auto snap-y snap-mandatory scrollbar-hide">
+        
+        {/* --- FLUX VIDÉO STYLE TIKTOK --- */}
+        {activeTab === "home" && feedVideos.map((vid, idx) => (
+          <section key={idx} className="h-[calc(100vh-140px)] w-full snap-start relative bg-zinc-950">
+            {/* Lecteur Vidéo Plein Écran */}
+            <iframe 
+              className="w-full h-full object-cover"
+              src={`https://www.youtube.com/embed/${vid.id}?autoplay=1&mute=1&controls=0&loop=1&playlist=${vid.id}`} 
+              allow="autoplay; encrypted-media"
+            ></iframe>
+
+            {/* Overlay d'interactions (À droite) */}
+            <div className="absolute right-4 bottom-24 flex flex-col gap-6 items-center">
+              <div className="flex flex-col items-center" onClick={() => setEarnings(earnings + 0.01)}>
+                <div className="bg-zinc-900/80 p-3 rounded-full border border-white/20">
+                  <Heart size={28} className="text-white hover:text-red-500 transition-colors" />
                 </div>
-                <span className="text-[8px] text-gray-500 font-bold">AJOUTER</span>
+                <span className="text-[10px] font-bold mt-1">{vid.likes}</span>
               </div>
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="flex flex-col items-center gap-1 min-w-[70px]">
-                  <div className="w-16 h-16 rounded-full border-2 border-yellow-500 p-1">
-                    <img src={`https://i.pravatar.cc/150?u=${i}`} className="w-full h-full rounded-full object-cover" />
-                  </div>
-                  <span className="text-[8px] text-gray-400 font-medium">MEMBRE {i}</span>
-                </div>
-              ))}
+              <div className="bg-zinc-900/80 p-3 rounded-full border border-white/20" onClick={() => setActiveTab("chat")}>
+                <MessageCircle size={28} />
+              </div>
+              <div className="bg-zinc-900/80 p-3 rounded-full border border-white/20">
+                <Share2 size={28} />
+              </div>
+              {/* Bouton Cadeau / Argent */}
+              <div className="bg-yellow-500 p-3 rounded-full shadow-lg shadow-yellow-500/40" onClick={() => setEarnings(earnings + 1.50)}>
+                <DollarSign size={28} className="text-black" />
+              </div>
             </div>
 
-            {/* ABONNEMENT */}
-            <div className="bg-zinc-900/60 m-4 p-6 rounded-[2.5rem] border border-yellow-500/20 text-center">
-              <ShieldCheck className="text-yellow-500 mx-auto mb-4" size={28} />
-              <button 
-                onClick={() => setIsSubscribed(!isSubscribed)}
-                className={`w-full font-black py-4 rounded-2xl uppercase text-xs tracking-[0.2em] transition-all ${
-                  isSubscribed ? "bg-zinc-800 text-gray-500" : "bg-yellow-500 text-black shadow-lg shadow-yellow-500/20"
-                }`}
-              >
-                {isSubscribed ? "ABONNÉ ✓" : "S'ABONNER"}
-              </button>
-            </div>
-
-            {/* POSTS */}
-            <div className="p-4 border-b border-zinc-900">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 rounded-full bg-yellow-500 flex items-center justify-center text-black font-bold">G</div>
-                <p className="font-black text-xs uppercase">Zee Magic News</p>
-              </div>
-              <div className="aspect-video bg-zinc-900 rounded-3xl overflow-hidden relative cursor-pointer" onClick={() => setActiveTab("video")}>
-                <iframe className="w-full h-full pointer-events-none" src={`https://www.youtube.com/embed/${channels[0].id}?controls=0&mute=1`} />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/20"><Play className="text-white" size={40} /></div>
+            {/* Infos Vidéo (En bas à gauche) */}
+            <div className="absolute left-4 bottom-20 max-w-[70%]">
+              <p className="font-black text-sm mb-1 uppercase tracking-tighter">@{vid.user}</p>
+              <p className="text-xs text-gray-300 line-clamp-2">{vid.title}</p>
+              <div className="mt-4 flex items-center gap-2">
+                 <button 
+                  onClick={() => setIsSubscribed(!isSubscribed)}
+                  className={`px-4 py-1.5 rounded-full text-[10px] font-black transition-all ${
+                    isSubscribed ? "bg-zinc-800 text-gray-400" : "bg-yellow-500 text-black"
+                  }`}
+                 >
+                   {isSubscribed ? "ABONNÉ ✓" : "S'ABONNER"}
+                 </button>
               </div>
             </div>
           </section>
-        )}
+        ))}
 
-        {/* --- TV (ZEE MAGIC & CO) --- */}
+        {/* --- SECTION LIVE (TikTok Style) --- */}
         {activeTab === "video" && (
-          <section className="animate-in zoom-in">
-            <div className="relative aspect-video w-full bg-black">
-              <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${currentVid}?autoplay=1`} allowFullScreen></iframe>
+          <section className="p-4 flex flex-col items-center justify-center h-full bg-zinc-950 text-center">
+            <div className="w-24 h-24 bg-red-600 rounded-full flex items-center justify-center mb-6 animate-pulse shadow-2xl shadow-red-500/20">
+              <Radio size={48} />
             </div>
-            <div className="p-4 grid grid-cols-1 gap-2">
-              {channels.map((ch) => (
-                <div key={ch.id} onClick={() => setCurrentVid(ch.id)} className={`p-4 rounded-2xl flex items-center gap-4 ${currentVid === ch.id ? "bg-yellow-500 text-black font-bold" : "bg-zinc-900"}`}>
-                  <Play size={18} fill={currentVid === ch.id ? "black" : "none"} />
-                  <div className="flex-1">
-                    <p className="text-[10px] uppercase">{ch.name}</p>
-                    <p className="text-[8px] opacity-60 italic">{ch.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* --- CHAT --- */}
-        {activeTab === "chat" && (
-          <section className="flex flex-col h-[78vh] p-4">
-            <div className="flex-1 overflow-y-auto space-y-4 mb-4">
-              {messages.map((m) => (
-                <div key={m.id} className={`flex ${m.isMe ? "justify-end" : "justify-start"}`}>
-                  <div className={`p-4 rounded-[1.8rem] max-w-[85%] ${m.isMe ? "bg-yellow-500 text-black font-bold" : "bg-zinc-900 text-white"}`}>
-                    <p className="text-sm">{m.text}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="flex gap-2 bg-zinc-900 p-2 rounded-[2rem]">
-              <input value={inputValue} onChange={(e) => setInputValue(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleSendMessage()} placeholder="Message..." className="flex-1 bg-transparent px-5 outline-none text-sm" />
-              <button onClick={handleSendMessage} className="bg-yellow-500 p-4 rounded-[1.5rem] text-black"><Send size={20} /></button>
-            </div>
+            <h2 className="text-2xl font-black uppercase mb-2 italic">Lancer un Direct</h2>
+            <p className="text-gray-500 text-xs mb-8 max-w-[250px]">Partagez votre écran ou votre caméra et recevez des cadeaux en direct.</p>
+            <button 
+              onClick={triggerLive}
+              className="bg-white text-black font-black px-10 py-4 rounded-full uppercase tracking-widest text-xs hover:bg-yellow-500 transition-all"
+            >
+              Démarrer le Live
+            </button>
           </section>
         )}
       </div>
 
-      {/* NAVIGATION BASSE */}
-      <nav className="fixed bottom-0 w-full bg-black/95 border-t border-zinc-900 px-10 py-5 flex justify-between items-center z-[200]">
-        <Home className={activeTab === "home" ? "text-yellow-500 scale-125" : "text-zinc-700"} onClick={() => setActiveTab("home")} />
-        <Tv className={activeTab === "video" ? "text-yellow-500 scale-125" : "text-zinc-700"} onClick={() => setActiveTab("video")} />
-        <Users className={activeTab === "dating" ? "text-yellow-500 scale-125" : "text-zinc-700"} onClick={() => setActiveTab("dating")} />
-        <div className="w-9 h-9 rounded-full border-2 border-zinc-800 overflow-hidden"><img src="/icon-512.png" className="w-full h-full object-cover" /></div>
+      {/* BARRE DE NAVIGATION INFÉRIEURE */}
+      <nav className="bg-black border-t border-zinc-900 px-8 py-4 flex justify-between items-center z-[100]">
+        <Home 
+          className={activeTab === "home" ? "text-yellow-500 scale-125" : "text-zinc-700"} 
+          onClick={() => setActiveTab("home")} 
+        />
+        <Plus 
+          className="bg-white text-black rounded-xl p-1 scale-150" 
+          onClick={triggerLive}
+        />
+        <Tv 
+          className={activeTab === "video" ? "text-yellow-500 scale-125" : "text-zinc-700"} 
+          onClick={() => setActiveTab("video")} 
+        />
+        <div 
+          onClick={() => setActiveTab("home")} 
+          className={`w-8 h-8 rounded-full border-2 ${activeTab === "home" ? "border-yellow-500 shadow-lg" : "border-zinc-800"}`}
+        >
+           <img src="/icon-512.png" className="w-full h-full object-cover rounded-full" />
+        </div>
       </nav>
     </main>
   );
