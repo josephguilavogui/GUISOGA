@@ -2,15 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --background: #000000;
+  --foreground: #ffffff;
+}
+
 body {
   background-color: #000000;
   color: #ffffff;
-  margin: 0;
+  font-family: 'Inter', sans-serif;
 }
 
-input::placeholder {
-  color: #444;
-}
-
-/* Scroll invisible pour un look pur */
+/* Scrollbar invisible style Empire */
 ::-webkit-scrollbar { display: none; }
+
+/* Suppression du blanc par défaut des inputs */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: white;
+  -webkit-box-shadow: 0 0 0px 1000px #000 inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
