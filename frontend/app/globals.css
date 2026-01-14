@@ -1,26 +1,80 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 10, 10, 10;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+  overflow: hidden; /* Empêche le rebond bizarre sur mobile */
+}
+
+/* --- LE SECRET DU FLUX INFINI (SCROLLBAR CACHÉE) --- */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* --- ANIMATION TIKTOK (SNAP SCROLLING) --- */
+.snap-y {
+  scroll-snap-type: y mandatory;
+}
+.snap-start {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* --- EFFET DE CLIC "EMPIRE" --- */
+button:active, .cursor-pointer:active {
+  transform: scale(0.95);
+  transition: transform 0.1s ease;
+}
+
+/* --- DESIGN DES VIDEOS YOUTUBE (FIX BUG DIMENSION) --- */
+iframe {
+  border: none;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+}
+
+/* --- ANIMATION D'ENTRÉE (FACEBOOK STYLE) --- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* --- BARRE DE NAVIGATION FLOTTANTE --- */
+nav {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* --- CHAMP DE SAISIE MESSENGER --- */
+input::placeholder {
+  color: #52525b;
+  font-weight: 500;
+}
+
+/* --- EFFET STORY ACTIVE --- */
+.story-ring {
+  padding: 2px;
+  background: linear-gradient(to right, #eab308, #ca8a04);
 }
