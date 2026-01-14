@@ -6,12 +6,13 @@ body {
   background-color: #000000;
   color: #ffffff;
   margin: 0;
+  font-family: 'Inter', sans-serif;
 }
 
-/* Force la couleur du texte et évite que le navigateur mette du blanc/gris moche */
+/* Visibilité du texte tapé */
 input {
   background-color: #000000 !important;
-  color: #ffffff !important; /* Texte blanc pour la visibilité */
+  color: #ffffff !important;
 }
 
 input:-webkit-autofill {
