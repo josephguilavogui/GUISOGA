@@ -1,51 +1,56 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
-import { Home, Video, Plus, MessageCircle, Menu, Search, Star, Heart, Share2, LogOut, Send, ArrowLeft, Music, Bookmark } from "lucide-react";
+import { useState, useEffect, useMemo } from "react";
+import { Home, Video, Plus, MessageCircle, Menu, Search, Star, Heart, Share2, LogOut, Send, ArrowLeft, Music, Bookmark, TrendingUp } from "lucide-react";
 
 export default function GuisogaEmpire() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [activeTab, setActiveTab] = useState("home"); // home, chat, video
+  const [activeTab, setActiveTab] = useState("home"); 
   const [isLoginView, setIsLoginView] = useState(true);
   
-  // États Authentification
+  // Données Brutes (Simulées comme provenant d'une base de données)
+  const rawPosts = [
+    { id: 1, type: "text", user: "Joseph Guilavogui", content: "L'analyse du Real Madrid vs City est prête. Confidentialité totale.", prestige: 95, category: "prognostic", date: new Date() },
+    { id: 2, type: "video", user: "GUISOGA", content: "Bienvenue dans l'élite.", prestige: 100, category: "official", date: new Date(Date.now() - 100000) },
+    { id: 3, type: "text", user: "Membre001", content: "J'ai gagné gros grâce aux conseils d'hier !", prestige: 50, category: "community", date: new Date(Date.now() - 500000) },
+  ];
+
+  // 🧠 L'ALGORITHME GUISOGA : Tri par Prestige et Récence
+  const sortedEmpireFeed = useMemo(() => {
+    return [...rawPosts].sort((a, b) => {
+      // Priorité 1: Les posts officiels ou de Joseph (Prestige > 90)
+      if (b.prestige !== a.prestige) return b.prestige - a.prestige;
+      // Priorité 2: Le plus récent
+      return b.date.getTime() - a.date.getTime();
+    });
+  }, [rawPosts]);
+
+  // --- États et Logique (Authentification / Chat identiques aux phases précédentes) ---
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
-
-  // États Vidéos (TikTok Style)
-  const videoData = [
-    { id: 1, user: "GUISOGA", desc: "Bienvenue dans l'élite. L'excellence est un choix.", music: "Empire Anthem", likes: "12K", color: "bg-zinc-800" },
-    { id: 2, user: "Joseph Guilavogui", desc: "L'analyse parfaite pour gagner gros ce soir. 📈", music: "Prognostic Gold", likes: "45K", color: "bg-zinc-900" },
-  ];
-  
-  // États Messagerie
-  const [messages, setMessages] = useState([
-    { id: 1, text: "Bienvenue dans la messagerie de l'Empire.", sender: "Système", time: "09:00" }
-  ]);
+  const [messages, setMessages] = useState([{ id: 1, text: "Messagerie cryptée active.", sender: "Système", time: "00:00" }]);
   const [newMessage, setNewMessage] = useState("");
 
   useEffect(() => {
-    const sessionActive = localStorage.getItem("guisoga_session_active");
-    if (sessionActive === "true") {
-      const savedUser = JSON.parse(localStorage.getItem("empire_user_data") || "{}");
-      setFirstName(savedUser.firstName || "Membre");
+    const session = localStorage.getItem("guisoga_session_active");
+    if (session === "true") {
+      const user = JSON.parse(localStorage.getItem("empire_user_data") || "{}");
+      setFirstName(user.firstName || "Elite");
       setIsLoggedIn(true);
     }
   }, []);
 
   const handleAuth = (e: React.FormEvent) => {
     e.preventDefault();
-    const savedUser = JSON.parse(localStorage.getItem("empire_user_data") || "{}");
+    const saved = JSON.parse(localStorage.getItem("empire_user_data") || "{}");
     if (isLoginView) {
-      if (savedUser.email === email && savedUser.password === password) {
+      if (saved.email === email && saved.password === password) {
         localStorage.setItem("guisoga_session_active", "true");
-        setFirstName(savedUser.firstName);
-        setIsLoggedIn(true);
-      } else { alert("Accès refusé."); }
+        setFirstName(saved.firstName); setIsLoggedIn(true);
+      } else alert("Refusé.");
     } else {
       localStorage.setItem("empire_user_data", JSON.stringify({ email, password, firstName }));
-      setIsLoginView(true);
-      alert("Compte créé !");
+      setIsLoginView(true); alert("Empire créé !");
     }
   };
 
@@ -55,8 +60,8 @@ export default function GuisogaEmpire() {
         <div className="max-w-6xl w-full flex flex-col lg:flex-row items-center justify-between gap-12">
           <div className="lg:w-1/2 text-center lg:text-left">
             <img src="/logo.png" alt="GUISOGA" className="w-40 h-40 mx-auto lg:mx-0 mb-4 drop-shadow-[0_0_15px_rgba(212,175,55,0.4)]" />
-            <h1 className="text-7xl lg:text-8xl font-black text-[#D4AF37] italic tracking-tighter mb-4">GUISOGA</h1>
-            <h2 className="text-2xl font-bold text-white uppercase">L'EMPIRE DE JOSEPH GUILAVOGUI</h2>
+            <h1 className="text-7xl lg:text-8xl font-black text-[#D4AF37] italic tracking-tighter mb-4 uppercase">GUISOGA</h1>
+            <p className="text-[#D4AF37]/60 text-lg uppercase tracking-[0.3em] font-light">L'intelligence au service de l'élite.</p>
           </div>
           <div className="lg:w-[420px] w-full">
             <div className="bg-[#111] p-8 rounded-[40px] border border-[#D4AF37]/20 shadow-2xl">
@@ -65,7 +70,7 @@ export default function GuisogaEmpire() {
                 <input required type="email" placeholder="E-mail" value={email} onChange={(e)=>setEmail(e.target.value)} className="w-full bg-black border border-zinc-800 text-white p-5 rounded-2xl outline-none" />
                 <input required type="password" placeholder="Mot de passe" value={password} onChange={(e)=>setPassword(e.target.value)} className="w-full bg-black border border-zinc-800 text-white p-5 rounded-2xl outline-none" />
                 <button type="submit" className="w-full bg-gradient-to-r from-[#D4AF37] to-[#AA8A2E] text-black font-black py-4 rounded-2xl text-xl uppercase">ENTRER</button>
-                <button type="button" onClick={() => setIsLoginView(!isLoginView)} className="w-full text-zinc-500 text-sm mt-2">{isLoginView ? "Créer un compte" : "Déjà membre ?"}</button>
+                <button type="button" onClick={() => setIsLoginView(!isLoginView)} className="w-full text-zinc-500 text-sm mt-2">{isLoginView ? "Rejoindre l'Empire" : "Connexion"}</button>
               </form>
             </div>
           </div>
@@ -75,75 +80,71 @@ export default function GuisogaEmpire() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col overflow-hidden">
-      {/* BARRE HAUTE (Cachée sur l'onglet Vidéo pour immersion) */}
-      {activeTab !== "video" && (
-        <nav className="p-4 bg-zinc-950 border-b border-[#D4AF37]/20 flex justify-between items-center z-50">
-          <h1 className="text-2xl font-black text-[#D4AF37] italic">GUISOGA</h1>
-          <div className="w-9 h-9 bg-[#D4AF37] rounded-full flex items-center justify-center text-black font-black uppercase">{firstName[0]}</div>
-        </nav>
-      )}
+    <div className="min-h-screen bg-black text-white flex flex-col overflow-hidden font-sans">
+      {/* NAV HAUTE */}
+      <nav className="p-4 bg-zinc-950 border-b border-[#D4AF37]/20 flex justify-between items-center z-50">
+        <h1 className="text-2xl font-black text-[#D4AF37] italic uppercase tracking-tighter">GUISOGA</h1>
+        <div className="flex gap-4 items-center">
+            <TrendingUp size={20} className="text-[#D4AF37]" />
+            <div className="w-9 h-9 bg-gradient-to-tr from-[#D4AF37] to-[#AA8A2E] rounded-full flex items-center justify-center text-black font-black uppercase">{firstName[0]}</div>
+        </div>
+      </nav>
 
-      {/* CONTENU PRINCIPAL */}
-      <main className="flex-1 overflow-hidden">
-        {activeTab === "home" && (
-          <div className="p-4 max-w-2xl mx-auto space-y-6">
-            <div className="bg-zinc-900/50 p-6 rounded-[35px] border border-zinc-800">
-              <h2 className="text-2xl font-black italic">EMPIRE FEED</h2>
-              <p className="text-zinc-500 text-sm italic">"Seuls les audacieux construisent l'histoire."</p>
-            </div>
-            <div className="bg-zinc-900/30 rounded-[35px] border border-zinc-800 h-64 flex items-center justify-center text-zinc-600">Actualités de l'Empire...</div>
-          </div>
-        )}
-
-        {activeTab === "video" && (
-          <div className="h-full w-full overflow-y-scroll snap-y snap-mandatory bg-black">
-            {videoData.map((v) => (
-              <div key={v.id} className={`h-full w-full snap-start relative flex flex-col justify-end ${v.color}`}>
-                {/* Infos Vidéo à gauche */}
-                <div className="absolute bottom-24 left-4 z-10 space-y-2">
-                  <p className="font-bold text-lg">@{v.user} <Star size={14} className="inline text-[#D4AF37] fill-[#D4AF37]" /></p>
-                  <p className="text-sm max-w-[80%]">{v.desc}</p>
-                  <div className="flex items-center gap-2 text-xs text-zinc-400">
-                    <Music size={12} /> <span>{v.music}</span>
-                  </div>
-                </div>
-                {/* Boutons à droite */}
-                <div className="absolute bottom-24 right-4 z-10 flex flex-col gap-6 items-center">
-                   <div className="flex flex-col items-center"><div className="p-3 bg-zinc-800/50 rounded-full text-white"><Heart size={28} /></div><span className="text-[10px] mt-1 font-bold">{v.likes}</span></div>
-                   <div className="flex flex-col items-center"><div className="p-3 bg-zinc-800/50 rounded-full text-white"><MessageCircle size={28} /></div><span className="text-[10px] mt-1 font-bold">852</span></div>
-                   <div className="flex flex-col items-center"><div className="p-3 bg-zinc-800/50 rounded-full text-white"><Bookmark size={28} /></div></div>
-                   <div className="flex flex-col items-center"><div className="p-3 bg-zinc-800/50 rounded-full text-white"><Share2 size={28} /></div></div>
-                </div>
-              </div>
+      {/* CONTENU ALGORITHMIQUE */}
+      <main className="flex-1 overflow-y-auto">
+        <div className="max-w-2xl mx-auto p-4 space-y-6">
+          
+          {/* Section Suggestion Algorithmique */}
+          <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+            {["Pour vous", "Analyses", "Direct", "Elite"].map((tag, i) => (
+              <span key={i} className={`px-4 py-2 rounded-full border text-xs font-bold uppercase whitespace-nowrap ${i === 0 ? "bg-[#D4AF37] text-black border-[#D4AF37]" : "border-zinc-800 text-zinc-500"}`}>
+                {tag}
+              </span>
             ))}
           </div>
-        )}
 
-        {activeTab === "chat" && (
-          <div className="h-full flex flex-col max-w-2xl mx-auto border-x border-zinc-900">
-             <div className="flex-1 overflow-y-auto p-4 space-y-4">
-               {messages.map(m => (
-                 <div key={m.id} className={`flex flex-col ${m.sender === firstName ? "items-end" : "items-start"}`}>
-                   <div className={`p-4 rounded-3xl ${m.sender === firstName ? "bg-[#D4AF37] text-black" : "bg-zinc-800 text-white"}`}>{m.text}</div>
-                 </div>
-               ))}
-             </div>
-             <div className="p-4 bg-zinc-950 border-t border-zinc-900 flex gap-2">
-               <input value={newMessage} onChange={(e)=>setNewMessage(e.target.value)} placeholder="Message..." className="flex-1 bg-zinc-900 p-4 rounded-2xl outline-none" />
-               <button className="bg-[#D4AF37] p-4 rounded-2xl text-black"><Send size={20} /></button>
-             </div>
-          </div>
-        )}
+          {/* Affichage des posts triés par le "cerveau" */}
+          {sortedEmpireFeed.map((post) => (
+            <div key={post.id} className="bg-zinc-900/40 rounded-[35px] border border-zinc-800 p-6 space-y-4">
+              <div className="flex justify-between items-start">
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 bg-zinc-800 rounded-full flex items-center justify-center text-[#D4AF37] font-bold border border-[#D4AF37]/20">
+                    {post.user[0]}
+                  </div>
+                  <div>
+                    <p className="font-black text-sm flex items-center gap-1 uppercase tracking-tight">
+                      {post.user} {post.prestige > 90 && <Star size={12} className="text-[#D4AF37] fill-[#D4AF37]" />}
+                    </p>
+                    <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest">
+                      {post.category} • {post.prestige}% Prestige
+                    </p>
+                  </div>
+                </div>
+                <div className="bg-[#D4AF37]/10 text-[#D4AF37] text-[10px] px-2 py-1 rounded-md font-bold">TOP CONTENT</div>
+              </div>
+              <p className="text-zinc-200 leading-relaxed font-medium">{post.content}</p>
+              <div className="flex justify-between items-center pt-4 border-t border-zinc-800/50">
+                <div className="flex gap-6">
+                  <Heart size={22} className="text-zinc-700 hover:text-red-500 cursor-pointer transition-colors" />
+                  <MessageCircle size={22} className="text-zinc-700 hover:text-[#D4AF37] cursor-pointer" onClick={() => setActiveTab("chat")} />
+                  <Share2 size={22} className="text-zinc-700 hover:text-[#D4AF37] cursor-pointer" />
+                </div>
+                <Bookmark size={22} className="text-zinc-700" />
+              </div>
+            </div>
+          ))}
+        </div>
       </main>
 
-      {/* BARRE DE NAVIGATION BASSE */}
-      <nav className="bg-zinc-950 border-t border-[#D4AF37]/10 p-4 flex justify-around items-center z-50">
-        <Home className={activeTab === "home" ? "text-[#D4AF37]" : "text-zinc-700"} size={28} onClick={() => setActiveTab("home")} />
-        <Video className={activeTab === "video" ? "text-[#D4AF37]" : "text-zinc-700"} size={28} onClick={() => setActiveTab("video")} />
-        <div className="bg-[#D4AF37] text-black rounded-2xl p-1 px-3 flex items-center shadow-lg shadow-[#D4AF37]/30"><Plus size={24} strokeWidth={3} /></div>
-        <MessageCircle className={activeTab === "chat" ? "text-[#D4AF37]" : "text-zinc-700"} size={28} onClick={() => setActiveTab("chat")} />
-        <Menu className="text-zinc-700" size={28} onClick={() => {localStorage.removeItem("guisoga_session_active"); window.location.reload();}} />
+      {/* NAV BASSE */}
+      <nav className="bg-zinc-950 border-t border-[#D4AF37]/10 p-4 flex justify-around items-center backdrop-blur-md">
+        <Home className={activeTab === "home" ? "text-[#D4AF37]" : "text-zinc-800"} size={28} onClick={() => setActiveTab("home")} />
+        <Video className={activeTab === "video" ? "text-[#D4AF37]" : "text-zinc-800"} size={28} onClick={() => setActiveTab("video")} />
+        <div className="bg-gradient-to-b from-[#D4AF37] to-[#AA8A2E] text-black rounded-2xl p-1 px-3 flex items-center shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:scale-110 transition-transform">
+          <Plus size={24} strokeWidth={3} />
+        </div>
+        <MessageCircle className={activeTab === "chat" ? "text-[#D4AF37]" : "text-zinc-800"} size={28} onClick={() => setActiveTab("chat")} />
+        <Menu className="text-zinc-800" size={28} onClick={() => {localStorage.removeItem("guisoga_session_active"); window.location.reload();}} />
       </nav>
     </div>
   );
