@@ -1,9 +1,8 @@
-import type { Metadata } from "next";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: "GUISOGA EMPIRE",
-  description: "Le réseau social nouvelle génération",
+export const metadata = {
+  title: "GUISOGA",
+  description: "L’Empire de Joseph Guilavogui",
 };
 
 export default function RootLayout({
@@ -13,9 +12,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr">
-      <body className="antialiased bg-black selection:bg-yellow-500/30">
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
