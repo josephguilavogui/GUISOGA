@@ -34,6 +34,10 @@ mongoose
 // PORT (RENDER OU LOCAL)
 const PORT = process.env.PORT || 5000;
 
+app.get("/", (req, res) => {
+  res.send("GUISOGA backend fonctionne parfaitement 🚀");
+});
+
 app.listen(PORT, () => {
   console.log(`🚀 GUISOGA backend lancé sur le port ${PORT}`);
 });
