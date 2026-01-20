@@ -2,7 +2,7 @@ const router = require("express").Router();
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 
-// 🔹 INSCRIPTION
+// 🔹 REGISTER
 router.post("/register", async (req, res) => {
   try {
     const salt = await bcrypt.genSalt(10);
@@ -21,22 +21,18 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// 🔹 CONNEXION
+// 🔹 LOGIN
 router.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
-    if (!user) {
-      return res.status(404).json("Utilisateur introuvable");
-    }
+    if (!user) return res.status(404).json("Utilisateur non trouvé ❌");
 
     const validPassword = await bcrypt.compare(
       req.body.password,
       user.password
     );
-
-    if (!validPassword) {
-      return res.status(400).json("Mot de passe incorrect");
-    }
+    if (!validPassword)
+      return res.status(400).json("Mot de passe incorrect ❌");
 
     res.status(200).json(user);
   } catch (err) {
